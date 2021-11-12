@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '/constants/app_constants.dart';
 import '/models/brand_model.dart';
-import '/utils/services/api_keys.dart';
+import '../../../constants/api_keys.dart';
 import 'package:readmore/readmore.dart';
 
 class BrandList extends StatelessWidget {

@@ -5,8 +5,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
-import '/utils/helpers/account_change_handler.dart';
-import '/utils/services/api_keys.dart';
+import '../../../utils/services/account_change_handler.dart';
+import '../../../constants/api_keys.dart';
 
 class CustomRatingBar extends StatefulWidget {
   final int id;

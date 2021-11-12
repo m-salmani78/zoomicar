@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import '/constants/app_constants.dart';
 import '/screens/add_car/add_car.dart';
 import '/screens/specifications/widgets/menu.dart';
-import '/utils/helpers/account_change_handler.dart';
+import '../../utils/services/account_change_handler.dart';
 import '/models/car_model.dart';
 import '/models/account_model.dart';
 

@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
-import '/utils/services/api_keys.dart';
+import '../../../constants/api_keys.dart';
 
 class AdvertisingView extends StatefulWidget {
   const AdvertisingView({Key? key}) : super(key: key);

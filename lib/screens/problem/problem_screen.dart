@@ -101,17 +101,13 @@ class ProblemScreen extends StatelessWidget {
           radius: 160,
           lineWidth: 10,
           percent: problem.percent * 0.01,
-          center: Hero(
+          child: Hero(
             tag: problem.hashCode,
             child: Image.asset(
               problem.imageAssetAddress,
-              height: 100,
-              width: 100,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Image.asset(
-                'assets/images/ic-engine-oil-filled.png',
-                height: 130,
-              ),
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.error),
             ),
           ),
           progressColor: problem.color,

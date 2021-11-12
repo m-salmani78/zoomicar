@@ -6,7 +6,7 @@ import '/models/mechanic.dart';
 import '/models/problem_model.dart';
 import '/screens/map/map_screen.dart';
 import '/screens/mechanic_details/widget/rating_bar.dart';
-import '/utils/services/api_keys.dart';
+import '../../constants/api_keys.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MechanicDetailsScreen extends StatelessWidget {

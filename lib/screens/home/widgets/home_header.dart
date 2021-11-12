@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '/utils/helpers/account_change_handler.dart';
-import '/utils/services/api_keys.dart';
+import '../../../utils/services/account_change_handler.dart';
+import '../../../constants/api_keys.dart';
 import '/screens/home/widgets/header_background.dart';
 import '/models/car_model.dart';
 import '/widgets/change_car_sheet.dart';

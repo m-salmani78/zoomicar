@@ -9,8 +9,8 @@ import '/constants/app_constants.dart';
 import '/models/account_model.dart';
 import '/models/problem_model.dart';
 import '/screens/home/home_screen.dart';
-import '/utils/helpers/account_change_handler.dart';
-import '/utils/services/api_keys.dart';
+import '../../../utils/services/account_change_handler.dart';
+import '../../../constants/api_keys.dart';
 
 class MarkCompleteDialog extends StatefulWidget {
   final int carId;

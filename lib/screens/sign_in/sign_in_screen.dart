@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '/screens/home/home_screen.dart';
 import '/screens/sign_up/sign_up_screen.dart';
-import '/utils/helpers/account_change_handler.dart';
-import '/utils/services/api_keys.dart';
+import '../../utils/services/account_change_handler.dart';
+import '../../constants/api_keys.dart';
 import '/widgets/form_error.dart';
 
 class SignInScreen extends StatefulWidget {

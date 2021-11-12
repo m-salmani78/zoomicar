@@ -5,8 +5,8 @@ import '/constants/app_constants.dart';
 import '/models/account_model.dart';
 import '/screens/add_car/add_car.dart';
 import '/screens/home/home_screen.dart';
-import '/utils/helpers/account_change_handler.dart';
-import '/utils/services/api_keys.dart';
+import '../utils/services/account_change_handler.dart';
+import '../constants/api_keys.dart';
 
 class ChooseCarBottomSheet extends StatelessWidget {
   final accountBox = Hive.box<Account>(accountBoxKey);
@@ -85,7 +85,7 @@ class ChooseCarBottomSheet extends StatelessWidget {
       color: Colors.transparent,
       child: ListTile(
         title: Text(title),
-        leading: CircleAvatar(radius: 24, child: avatar),
+        leading: ClipOval(child: CircleAvatar(radius: 24, child: avatar)),
         onTap: onTap,
         trailing: id < 0
             ? null

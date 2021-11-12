@@ -6,7 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '/constants/app_constants.dart';
 import '/screens/home/home_screen.dart';
 import '/screens/splash/splash_screen.dart';
-import '/utils/helpers/account_change_handler.dart';
+import 'utils/services/account_change_handler.dart';
 import '/utils/services/notifications_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

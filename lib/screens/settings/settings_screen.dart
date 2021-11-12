@@ -3,7 +3,7 @@ import '/config/themes/theme_config.dart';
 import '/screens/about_us/about_us.dart';
 import '/screens/specifications/specifications_screen.dart';
 import '/screens/splash/splash_screen.dart';
-import '/utils/helpers/account_change_handler.dart';
+import '../../utils/services/account_change_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -7,7 +7,7 @@ import '/config/themes/light_theme.dart';
 import '/constants/app_constants.dart';
 import '/models/problem_model.dart';
 import '/models/car_model.dart';
-import '/utils/helpers/account_change_handler.dart';
+import 'account_change_handler.dart';
 
 class NotificationService {
   static bool listenerIsInitialized = false;
