@@ -15,7 +15,7 @@ class NotificationService {
 
   static Future<bool> initialSettings() async {
     var result = await AwesomeNotifications().initialize(
-      'resource://drawable/ringsport',
+      'resource://mipmap/ic_launcher',
       [
         NotificationChannel(
             channelKey: groupNotifKey,

@@ -73,7 +73,7 @@ class ProblemScreen extends StatelessWidget {
               TextButton(
                 child: const Text('همه'),
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => MechanicsScreen(problem: problem),
@@ -88,7 +88,7 @@ class ProblemScreen extends StatelessWidget {
               const SizedBox(width: 16),
             ],
           ),
-          RecommendedMechanics(problem: problem),
+          Expanded(child: RecommendedMechanics(problem: problem)),
         ],
       ),
     );

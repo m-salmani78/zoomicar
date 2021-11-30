@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:zoomicar/utils/helpers/show_snack_bar.dart';
 import '../../../utils/services/account_change_handler.dart';
 import '../../../constants/api_keys.dart';
 
@@ -56,10 +57,9 @@ class _CustomRatingBarState extends State<CustomRatingBar> {
           child: const Text('ارسال نظر'),
           onPressed: () async {
             if (_rate <= 0) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('ابتدا امتیاز مورد نظر خود را وارد کنید'),
-                ),
+              showWarningSnackBar(
+                context,
+                message: 'ابتدا امتیاز مورد نظر خود را وارد کنید',
               );
               return;
             }
@@ -85,15 +85,17 @@ class _CustomRatingBarState extends State<CustomRatingBar> {
               var json = jsonDecode(response.body);
               try {
                 if (json[StatusResponse.key] == StatusResponse.success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('نظر شما با موفقیت ثبت شد')),
+                  showSuccessSnackBar(
+                    context,
+                    message: 'نظر شما با موفقیت ثبت شد',
                   );
                   return;
                 }
               } catch (_) {}
             }
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('خطا در برقراری ارتباط')),
+            showWarningSnackBar(
+              context,
+              message: 'خطا در برقراری ارتباط',
             );
           },
         ),

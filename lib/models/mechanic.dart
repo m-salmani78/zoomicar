@@ -1,11 +1,22 @@
 // To parse this JSON data, do
 //
 //     final mechanic = mechanicFromJson(jsonString);
-import 'dart:math' as math;
-import 'dart:convert';
+import 'package:zoomicar/utils/helpers/distance_helper.dart';
 
-List<Mechanic> mechanicFromJson(String str) =>
-    List<Mechanic>.from(json.decode(str).map((x) => Mechanic.fromJson(x)));
+mechanicsFromList({
+  required List data,
+  required List<Mechanic> mechanics,
+  required List<Mechanic> advertise,
+}) {
+  for (var item in data) {
+    if (item["advertise"]) {
+      advertise.add(Mechanic.fromJson(item));
+    } else {
+      mechanics.add(Mechanic.fromJson(item));
+    }
+  }
+  // List<Mechanic>.from(data.map((x) => Mechanic.fromJson(x)));
+}
 
 class Mechanic {
   Mechanic({
@@ -18,7 +29,7 @@ class Mechanic {
     required this.location,
     required this.userRate,
     this.tags = const [],
-    required this.advertise,
+    // required this.advertise,
   });
 
   final int id;
@@ -30,20 +41,10 @@ class Mechanic {
   final CustomLocation location;
   final List<String> tags;
   final int userRate;
-  final bool advertise;
+  // final bool advertise;
 
   double getDistance(CustomLocation location) {
-    const R = 6371; //kilo metres
-    final deltaPhi = (location.lat - this.location.lat).abs() * math.pi / 180;
-    final deltaLanda =
-        (location.long - this.location.long).abs() * math.pi / 180;
-    final a = math.sin(deltaPhi / 2) * math.sin(deltaPhi / 2) +
-        math.cos(this.location.lat * math.pi / 180) *
-            math.cos(location.lat * math.pi / 180) *
-            math.sin(deltaLanda / 2) *
-            math.sin(deltaLanda / 2);
-    final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
-    return R * c;
+    return calculateDistance(this.location, location);
   }
 
   factory Mechanic.fromJson(Map<String, dynamic> json) => Mechanic(
@@ -56,7 +57,7 @@ class Mechanic {
         location: CustomLocation.fromJson(json["location"]),
         userRate: json["user_rate"],
         tags: List<String>.from(json["tags"].map((x) => x)),
-        advertise: json["advertise"],
+        // advertise: json["advertise"],
       );
 }
 
