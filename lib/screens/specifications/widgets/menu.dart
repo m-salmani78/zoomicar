@@ -60,9 +60,8 @@ class MenuItems extends StatelessWidget {
                           //   builder: (_) =>
                           //       Center(child: CircularProgressIndicator()),
                           // );
-                          var error =
-                              await AccountChangeHandler.deleteCurrentCar(
-                                  car.carId);
+                          var error = await AccountChangeHandler()
+                              .deleteCurrentCar(car.carId);
                           if (error == null) {
                             Navigator.pushAndRemoveUntil(
                               context,

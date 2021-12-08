@@ -71,7 +71,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> {
             );
             var response = await http.post(
               Uri.parse(baseUrl + '/car/rate_center'),
-              headers: {authorization: AccountChangeHandler.token ?? ''},
+              headers: {authorization: AccountChangeHandler().token ?? ''},
               body: {
                 "center_id": widget.id.toString(),
                 "rate": _rate.toString(),

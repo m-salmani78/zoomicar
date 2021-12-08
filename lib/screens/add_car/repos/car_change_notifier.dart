@@ -42,7 +42,7 @@ class CarChangeNotifier with ChangeNotifier {
           .post(
         Uri.parse(
             baseUrl + (isEditMode ? '/car/edit_car' : '/car/register_car')),
-        headers: {authorization: AccountChangeHandler.token ?? ''},
+        headers: {authorization: AccountChangeHandler().token ?? ''},
         body: body,
       )
           .then((response) {
@@ -60,7 +60,7 @@ class CarChangeNotifier with ChangeNotifier {
             }
             if (!isEditMode) {
               car.carId = json["car_id"] ?? -1;
-              AccountChangeHandler.carIndex = accountBox.length;
+              AccountChangeHandler().carIndex = accountBox.length;
               _addCar();
               log('finished adding');
             } else {

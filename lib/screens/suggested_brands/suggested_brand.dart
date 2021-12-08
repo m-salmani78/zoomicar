@@ -28,7 +28,7 @@ class _SuggestedBrandsScreenState extends State<SuggestedBrandsScreen> {
       body: FutureBuilder(
         future: http.post(
           Uri.parse(baseUrl + '/car/brands'),
-          headers: {authorization: AccountChangeHandler.token ?? ""},
+          headers: {authorization: AccountChangeHandler().token ?? ""},
           body: {"accessory": widget.problem.tag},
         ),
         builder: (context, snapshot) {

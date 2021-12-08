@@ -21,7 +21,7 @@ class _SpecificationsScreenState extends State<SpecificationsScreen> {
   Widget build(BuildContext context) {
     final Car? car = accountBox.isEmpty
         ? null
-        : accountBox.getAt(AccountChangeHandler.carIndex ?? 0)!.car;
+        : accountBox.getAt(AccountChangeHandler().carIndex ?? 0)!.car;
     return Scaffold(
       appBar: AppBar(
         title: const Text('مشخصات خودرو'),

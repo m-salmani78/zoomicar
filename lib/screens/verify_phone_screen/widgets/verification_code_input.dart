@@ -13,9 +13,9 @@ class VerificationCodeInput extends StatefulWidget {
       {Key? key,
       this.forceUpperCase = true,
       required this.onCompleted,
-      this.length = 4,
+      this.length = 5,
       this.itemDecoration,
-      this.itemSize = 50,
+      this.itemSize = 45,
       this.autofocus = true})
       : assert(length > 0),
         assert(itemSize > 0),
@@ -60,12 +60,18 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
       maxLines: 1,
       maxLength: 2,
       focusNode: _listFocusNode[index],
+      showCursor: false,
+      enableInteractiveSelection: false,
       decoration: InputDecoration(
         enabled: _currentIdex == index,
         counterText: "",
         contentPadding: EdgeInsets.all(((widget.itemSize * 2) / 10)),
         errorMaxLines: 1,
         fillColor: Colors.black,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        enabledBorder: inputBorder(Colors.grey),
+        disabledBorder: inputBorder(Colors.grey[400]!),
+        focusedBorder: inputBorder(Theme.of(context).colorScheme.primary),
       ),
       onChanged: (String value) {
         if (value.length > 1 && index < widget.length ||
@@ -106,7 +112,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
       autocorrect: false,
       textAlign: TextAlign.center,
       autofocus: widget.autofocus,
-      style: const TextStyle(fontSize: 25, color: Colors.black),
+      style: const TextStyle(fontSize: 20, color: Colors.black),
       inputFormatters: widget.forceUpperCase ? [UpperCaseTextFormatter()] : [],
     );
   }
@@ -172,3 +178,8 @@ class UpperCaseTextFormatter extends TextInputFormatter {
     );
   }
 }
+
+inputBorder(Color color) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(width: 2.5, color: color),
+    );

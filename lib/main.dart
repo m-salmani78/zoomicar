@@ -24,20 +24,18 @@ Future<void> main() async {
   Hive.registerAdapter(CarAdapter());
   Hive.registerAdapter(ProblemAdapter());
   Hive.registerAdapter(AccountAdapter());
-  var accountBox = await Hive.openBox<Account>(accountBoxKey);
-  AccountChangeHandler.initialCar(prefs: prefs, accountBox: accountBox);
-  AccountChangeHandler.initialUserName(prefs: prefs);
-  final token = AccountChangeHandler.initialToken(prefs);
+  final accountBox = await Hive.openBox<Account>(accountBoxKey);
+  final isSignedIn = await AccountChangeHandler.initialize(prefs, accountBox);
   final IThemeConfig appTheme = ThemeChangeHandler.initialTheme(prefs);
-  runApp(MyApp(token: token, appTheme: appTheme));
+  runApp(MyApp(isSignedIn: isSignedIn, appTheme: appTheme));
 }
 
 class MyApp extends StatelessWidget {
   static final navigatorKey = GlobalKey<NavigatorState>();
-  final String? token;
+  final bool isSignedIn;
   final IThemeConfig appTheme;
-  // ignore: use_key_in_widget_constructors
-  const MyApp({required this.token, required this.appTheme});
+  const MyApp({Key? key, required this.isSignedIn, required this.appTheme})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,25 +45,21 @@ class MyApp extends StatelessWidget {
     ]);
     return ChangeNotifierProvider(
       create: (context) => ThemeChangeHandler(appTheme),
-      child: Consumer<ThemeChangeHandler>(
-        builder: (context, state, child) {
-          return MaterialApp(
-            navigatorKey: navigatorKey,
-            supportedLocales: const [Locale('fa')],
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            debugShowCheckedModeBanner: false,
-            title: 'ZoomiCar',
-            theme: state.appTheme.themeData,
-            home: (token == null || token!.isEmpty)
-                ? const SplashScreen()
-                : const HomeScreen(),
-          );
-        },
-      ),
+      builder: (context, child) {
+        return MaterialApp(
+          navigatorKey: navigatorKey,
+          supportedLocales: const [Locale('fa')],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          debugShowCheckedModeBanner: false,
+          title: 'ZoomiCar',
+          theme: context.watch<ThemeChangeHandler>().appTheme.themeData,
+          home: isSignedIn ? const HomeScreen() : const SplashScreen(),
+        );
+      },
     );
   }
 }

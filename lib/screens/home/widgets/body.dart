@@ -129,7 +129,7 @@ class _BodyState extends State<Body> {
           )
         : FutureBuilder(
             future: http.post(Uri.parse(baseUrl + '/car/notifications'),
-                headers: {authorization: AccountChangeHandler.token ?? ''},
+                headers: {authorization: AccountChangeHandler().token ?? ''},
                 body: {"car_id": account.id.toString()}),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

@@ -9,79 +9,102 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '/models/account_model.dart';
 
 class AccountChangeHandler {
-  static int? _carIndex;
-  static String? _token;
-  static String _userName = "";
+  int? _carIndex;
+  String? _token;
+  String _userName = "";
 
-  static String? get token => _token;
-  static String get userName => _userName;
+  String? get token => _token;
+  String get userName => _userName;
 
-  static setToken(
-      {required SharedPreferences prefs,
-      String? value,
-      Box<Account>? accountBox}) {
-    if (value == null || value.isEmpty) {
-      prefs.remove(SharedPrefsKeys.token_key);
-      AccountChangeHandler._token = null;
-      var box = accountBox ?? Hive.box<Account>(accountBoxKey);
-      box.clear();
-      log('@ I: delete token');
-    } else {
-      prefs.setString(SharedPrefsKeys.token_key, value);
-      log('@ I: set token');
-      AccountChangeHandler._token = value;
-    }
-  }
+  static final _instance = AccountChangeHandler._getInstance();
 
-  static void setUserName(String value, {SharedPreferences? prefs}) {
-    _userName = value;
-    if (prefs == null) {
-      SharedPreferences.getInstance().then((prefs) {
-        setUserName(value, prefs: prefs);
-      });
-    } else {
-      prefs.setString(userNameKey, value);
-      log('@ I: set userName');
-    }
-  }
+  AccountChangeHandler._getInstance();
 
-  static String? initialToken(SharedPreferences prefs) {
+  factory AccountChangeHandler() => _instance;
+
+  static Future<bool> initialize(
+      SharedPreferences prefs, Box<Account> accountBox) async {
     try {
-      String? token = prefs.getString(SharedPrefsKeys.token_key);
-      AccountChangeHandler._token = token;
-      log('@ I: initial token');
-      return token;
+      _instance._initialCar(prefs: prefs, accountBox: accountBox);
+      _instance._initialUserName(prefs);
+      final token = _instance.initialToken(prefs);
+      return token.isNotEmpty;
     } catch (e) {
-      log('@ Exception: ${e.toString()}');
+      log('Initial Exception: ${e.toString()}', name: 'AccountChangeHandler');
+      return false;
     }
   }
 
-  static int? initialCar(
+  // Future setToken(String? value) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   if (value == null || value.isEmpty) {
+  //     prefs.remove(SharedPrefsKeys.token_key);
+  //     _token = null;
+  //     log('@ I: delete token');
+  //   } else {
+  //     prefs.setString(SharedPrefsKeys.token_key, value);
+  //     _token = value;
+  //   }
+  // }
+
+  // void setUserName(String value, {SharedPreferences? prefs}) {
+  //   _userName = value;
+  //   if (prefs == null) {
+  //     SharedPreferences.getInstance().then((prefs) {
+  //       setUserName(value, prefs: prefs);
+  //     });
+  //   } else {
+  //     prefs.setString(userNameKey, value);
+  //   }
+  // }
+
+  Future setAccount({required String token, required String userName}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(SharedPrefsKeys.token_key, token);
+    _token = token;
+    log('@ I: set token = $token');
+    await prefs.setString(userNameKey, userName);
+    _userName = userName;
+    log('@ I: set userName = $userName');
+  }
+
+  Future<void> deleteAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(SharedPrefsKeys.token_key);
+    _token = null;
+    log('@ I: delete token');
+    await prefs.remove(userNameKey);
+    _userName = '';
+    log('@ I: delete userName');
+  }
+
+  String initialToken(SharedPreferences prefs) {
+    String token = prefs.getString(SharedPrefsKeys.token_key)!;
+    _token = token;
+    log('@ I: initial token = $_token');
+    return token;
+  }
+
+  _initialCar(
       {required SharedPreferences prefs, required Box<Account> accountBox}) {
     int index = prefs.getInt(SharedPrefsKeys.current_car_index) ?? 0;
     if (accountBox.isEmpty || index >= accountBox.length || index < 0) {
       log('@ I: initial current car. (index = null)');
-      return _carIndex = null;
+      _carIndex = null;
+      return;
     }
     _carIndex = index;
     log('@ I: initial current car. (index = $index)');
-    return index;
   }
 
-  static initialUserName({SharedPreferences? prefs}) {
-    if (prefs == null) {
-      SharedPreferences.getInstance().then((prefs) {
-        initialUserName(prefs: prefs);
-      });
-    } else {
-      _userName = prefs.getString(userNameKey) ?? '';
-      log('@ I: initial userName');
-    }
+  _initialUserName(SharedPreferences prefs) {
+    _userName = prefs.getString(userNameKey)!;
+    log('@ I: initial userName = $_userName');
   }
 
-  static int? get carIndex => _carIndex;
+  int? get carIndex => _carIndex;
 
-  static set carIndex(int? index) {
+  set carIndex(int? index) {
     _carIndex = (index != null && index < 0) ? null : index;
     SharedPreferences.getInstance().then((prefs) {
       prefs.setInt(SharedPrefsKeys.current_car_index, index ?? -1);
@@ -89,14 +112,14 @@ class AccountChangeHandler {
     });
   }
 
-  static logout(SharedPreferences prefs) {
-    var accountBox = Hive.box<Account>(accountBoxKey);
+  logout(SharedPreferences prefs) {
+    final accountBox = Hive.box<Account>(accountBoxKey);
     accountBox.clear();
     carIndex = null;
-    setToken(prefs: prefs, accountBox: accountBox);
+    deleteAccount();
   }
 
-  static Future<String?> deleteCurrentCar(int id) async {
+  Future<String?> deleteCurrentCar(int id) async {
     final accountBox = Hive.box<Account>(accountBoxKey);
     if (accountBox.isEmpty) return 'خودروی مورد نظر یافت نشد';
     try {

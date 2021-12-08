@@ -66,7 +66,7 @@ class NotificationService {
         channelKey: groupNotifKey,
         title: problem.title,
         body:
-            '${AccountChangeHandler.userName} عزیز ${problem.title} شما نیازمند تعویض است. برای مشاهده نزدیکترین مراکز کلیک کنید.',
+            '${AccountChangeHandler().userName} عزیز ${problem.title} شما نیازمند تعویض است. برای مشاهده نزدیکترین مراکز کلیک کنید.',
         summary: car.name,
         payload: {
           "car_id": car.carId.toString(),

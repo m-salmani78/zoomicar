@@ -1,5 +1,5 @@
-const double cornerRadius = 8;
-const double defaultElevation = 3;
+const double cornerRadius = 10;
+const double defaultElevation = 2.5;
 const String requiredInputError = 'این فیلد اجباری است';
 const String accountBoxKey = 'account-box';
 const String notificationsKey = 'cars-box';

@@ -15,7 +15,7 @@ class HeaderBackground extends StatelessWidget {
             decoration: BoxDecoration(
               color: color,
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(32)),
+                  const BorderRadius.vertical(top: Radius.circular(36)),
             ),
           ),
         )

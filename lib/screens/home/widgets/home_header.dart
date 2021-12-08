@@ -61,7 +61,7 @@ class HomeHeader extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'سلام ${AccountChangeHandler.userName}، خوش آمدید',
+              'سلام ${AccountChangeHandler().userName}، خوش آمدید',
               // 'Hi ${AccountChangeNotifier.userName}, Welcome',
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white),

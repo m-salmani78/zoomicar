@@ -50,7 +50,7 @@ class ChooseCarBottomSheet extends StatelessWidget {
               ),
               onTap: () {
                 final index = accountBox.values.toList().indexOf(account);
-                AccountChangeHandler.carIndex = index;
+                AccountChangeHandler().carIndex = index;
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -80,7 +80,7 @@ class ChooseCarBottomSheet extends StatelessWidget {
       Widget? avatar,
       Function()? onTap}) {
     final carsId = accountBox.values.map((e) => e.id).toList();
-    final index = AccountChangeHandler.carIndex;
+    final index = AccountChangeHandler().carIndex;
     return Material(
       color: Colors.transparent,
       child: ListTile(

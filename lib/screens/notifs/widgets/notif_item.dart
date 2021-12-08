@@ -37,7 +37,7 @@ class NotifItem extends StatelessWidget {
                   const Icon(Icons.notifications_on_outlined),
                   const SizedBox(width: 4),
                   Text(
-                    '${AccountChangeHandler.userName} عزیز',
+                    '${AccountChangeHandler().userName} عزیز',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],

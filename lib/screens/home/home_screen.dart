@@ -24,12 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int? index = AccountChangeHandler.carIndex;
+    int? index = AccountChangeHandler().carIndex;
     return (accountBox.isEmpty || index == null)
         ? FutureBuilder(
             future: http.get(
               Uri.parse(baseUrl + '/car/user_cars'),
-              headers: {authorization: AccountChangeHandler.token ?? ''},
+              headers: {authorization: AccountChangeHandler().token ?? ''},
             ),
             builder: (context, snapshot) {
               if (snapshot.hasError) return const Body(account: null);
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       for (var element in cars)
                         element.carId: Account(car: element)
                     });
-                    AccountChangeHandler.carIndex = 0;
+                    AccountChangeHandler().carIndex = 0;
                     return Body(account: accountBox.getAt(0));
                   }
                   return const Body(account: null);
@@ -59,3 +59,4 @@ class _HomeScreenState extends State<HomeScreen> {
         : Body(account: accountBox.getAt(index));
   }
 }
+//Token 15943417648f7394260d7d021404323b2aa0e2ed

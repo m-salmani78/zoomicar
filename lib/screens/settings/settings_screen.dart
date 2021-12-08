@@ -72,7 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('خروج', style: TextStyle(color: Colors.red)),
             onTap: () async {
               SharedPreferences.getInstance().then((prefs) {
-                AccountChangeHandler.logout(prefs);
+                AccountChangeHandler().logout(prefs);
               });
               Navigator.pushAndRemoveUntil(
                   context,

@@ -65,7 +65,7 @@ class _MarkCompleteDialogState extends State<MarkCompleteDialog> {
             );
             http.post(
               Uri.parse(baseUrl + '/car/update_accessory'),
-              headers: {authorization: AccountChangeHandler.token ?? ''},
+              headers: {authorization: AccountChangeHandler().token ?? ''},
               body: {
                 "accessory": widget.tag,
                 "last_change": kilometerage.toString(),

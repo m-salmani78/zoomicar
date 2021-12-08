@@ -33,7 +33,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       ),
       body: FutureBuilder(
         future: http.post(Uri.parse(baseUrl + '/car/notifications'),
-            headers: {authorization: AccountChangeHandler.token ?? ''},
+            headers: {authorization: AccountChangeHandler().token ?? ''},
             body: {"car_id": widget.car.carId.toString()}),
         builder: (context, snapshot) {
           // log('@ Connection State: ${snapshot.connectionState}');
