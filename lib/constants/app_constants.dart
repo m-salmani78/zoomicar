@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 const double cornerRadius = 10;
 const double defaultElevation = 2.5;
 const String requiredInputError = 'این فیلد اجباری است';
@@ -11,3 +13,7 @@ class NotifButtonKey {
   static String done = 'DONE';
   static String repeate = 'NOTIF_ME_AGAIN';
 }
+
+const textShadow = [
+  Shadow(blurRadius: 4, offset: Offset(-0.2, 0.3), color: Colors.black45),
+];

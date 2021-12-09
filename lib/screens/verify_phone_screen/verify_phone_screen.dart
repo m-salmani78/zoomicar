@@ -40,7 +40,7 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
     final type = widget.isRegister ? 'register' : 'login';
     return Scaffold(
       appBar: AppBar(
-        title: const Text('تایید شماره تلفن'),
+        title: const Text('کد فعالسازی'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -58,9 +58,9 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
             _isTimeEnd
                 ? _buildResendCode()
                 : Text('کد پس از $_timeRemainder ثانیه منقضی می شود'),
-            const SizedBox(height: 16),
+            const Spacer(),
             if (widget.provider.isLoading) const CircularProgressIndicator(),
-            const Spacer(flex: 2),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -89,26 +89,20 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
       children: [
         const Text('کد تایید را دریافت نکردید؟'),
         TextButton(
-          onPressed: () => setState(() {
-            _isTimeEnd = false;
-            _timeRemainder = waitingTime;
-            _timer = startTimer();
-          }),
+          onPressed: () => widget.provider.login(
+            context,
+            mobile: widget.mobile,
+            onReceived: () => setState(() {
+              _isTimeEnd = false;
+              _timeRemainder = waitingTime;
+              _timer = startTimer();
+            }),
+          ),
           child: const Text('دریافت مجدد'),
         )
       ],
     );
   }
-
-  // Future<void> verifyUser(var context) async {
-  //   FormData formData = FormData.fromMap({
-  //     "phone": widget.mobile,
-  //     "verification_code": _code,
-  //   });
-  //   response =
-  //       await dio.post(baseURL + "/account/verify_phone", data: formData);
-  //   // print(response.data.toString());
-  // }
 
   // Future<void> resendCode(var context) async {
   //   FormData formData = FormData.fromMap({
