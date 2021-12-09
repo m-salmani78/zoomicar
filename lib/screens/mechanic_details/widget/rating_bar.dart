@@ -21,6 +21,7 @@ class CustomRatingBar extends StatefulWidget {
 }
 
 class _CustomRatingBarState extends State<CustomRatingBar> {
+  final TextEditingController controller = TextEditingController();
   int _rate = -1;
   @override
   Widget build(BuildContext context) {
@@ -41,14 +42,15 @@ class _CustomRatingBarState extends State<CustomRatingBar> {
           onRatingUpdate: (value) => _rate = value.round(),
         ),
         const SizedBox(height: 16),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           child: TextField(
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
+            controller: controller,
             maxLength: 500,
             minLines: 1,
             maxLines: 5,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'تجربه تان را توصیف کنید (اختیاری)',
             ),
           ),
@@ -69,12 +71,14 @@ class _CustomRatingBarState extends State<CustomRatingBar> {
               builder: (context) =>
                   const Center(child: CircularProgressIndicator()),
             );
+            log('text = ${controller.text}');
             var response = await http.post(
               Uri.parse(baseUrl + '/car/rate_center'),
               headers: {authorization: AccountChangeHandler().token ?? ''},
               body: {
                 "center_id": widget.id.toString(),
                 "rate": _rate.toString(),
+                "text": controller.text,
               },
             ).onError((error, stackTrace) {
               return http.Response("", 404);

@@ -68,28 +68,35 @@ List<Problem> problemsFromJson(String str, {required int carId}) {
   }).toList();
 }
 
+List<String> tags = [
+  'oil_filter',
+  'tire',
+  'gasoline_filter',
+  'air_filter',
+  'engine_oil',
+  'gearbox_oil',
+  'brakepad',
+  'timingbelt',
+  'insurance',
+];
+
+List<String> persianTags = [
+  'فیلتر روغن',
+  'تایر',
+  'فیلتر بنزین',
+  'فیلتر هوا',
+  'روغن موتور',
+  'روغن گیربکس',
+  'لنت ترمز',
+  'تسمه تایم',
+  'بیمه شخص ثالث',
+];
+
 String tagToTitle(String tag) {
-  switch (tag) {
-    case 'oil_filter':
-      return 'فیلتر روغن';
-    case 'tire':
-      return 'تایر';
-    case 'gasoline_filter':
-      return 'فیلتر بنزین';
-    case 'air_filter':
-      return 'فیلتر هوا';
-    case 'engine_oil':
-      return 'روغن موتور';
-    case 'gearbox_oil':
-      return 'روغن گیربکس';
-    case 'brakepad':
-      return 'لنت ترمز';
-    case 'timingbelt':
-      return 'تسمه تایم';
-    case 'insurance':
-      return 'بیمه شخص ثالث';
-    default:
-      return tag;
+  try {
+    return persianTags[tags.indexOf(tag)];
+  } catch (e) {
+    return tag;
   }
 }
 

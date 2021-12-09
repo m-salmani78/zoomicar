@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:zoomicar/utils/helpers/show_snack_bar.dart';
 import '/constants/app_constants.dart';
 import '/screens/home/home_screen.dart';
 import '../../../utils/services/account_change_handler.dart';
@@ -12,6 +12,13 @@ import '/models/car_model.dart';
 import '/models/account_model.dart';
 
 class CarChangeNotifier with ChangeNotifier {
+  final Dio dio = Dio(
+    BaseOptions(
+        baseUrl: baseUrl + '/car',
+        headers: {authorization: AccountChangeHandler().token ?? ''},
+        connectTimeout: 4000,
+        receiveTimeout: 4000),
+  );
   final int pagesCount;
   final Car car;
   final Box<Account> accountBox = Hive.box(accountBoxKey);
@@ -20,9 +27,48 @@ class CarChangeNotifier with ChangeNotifier {
 
   CarChangeNotifier({required this.pagesCount, required this.car});
 
-  void _addCar() {
-    accountBox.put(car.carId, Account(car: car));
-    notifyListeners();
+  void _confirmCar(BuildContext context, bool isEditMode) async {
+    try {
+      Response response = await dio.post(
+        isEditMode ? '/edit_car' : '/register_car',
+        data: FormData.fromMap(car.toJson(id: isEditMode ? car.carId : null)),
+      );
+      log('@ StatusCode: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        log('@ Response:' + response.toString());
+        Map<String, dynamic> data = response.data;
+        if (data[StatusResponse.key] == StatusResponse.success) {
+          try {
+            car.image = data["image"];
+          } catch (e) {
+            log('@ Error: image key is not exist :(');
+            car.image = "";
+          }
+          if (!isEditMode) {
+            car.carId = data["car_id"] ?? -1;
+            AccountChangeHandler().carIndex = accountBox.length;
+            accountBox.put(car.carId, Account(car: car));
+            notifyListeners();
+            log('finished adding');
+          } else {
+            // int key = accountBox.keyAt(AccountChangeHandler.carIndex ?? 0);
+            accountBox.delete(car.carId);
+            accountBox.put(car.carId, Account(car: car));
+            log('finished editing');
+          }
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (route) => false);
+        } else {
+          Navigator.pop(context);
+          showWarningSnackBar(context, message: 'اطلاعات وارد شده ناقص است');
+        }
+      }
+    } on DioError catch (e, _) {
+      Navigator.pop(context);
+      showWarningSnackBar(context, message: 'خطا در ارسال اطلاعات');
+    }
   }
 
   Future<void> nextPage(BuildContext context,
@@ -33,64 +79,10 @@ class CarChangeNotifier with ChangeNotifier {
       showDialog(
         context: context,
         barrierDismissible: false,
+        useRootNavigator: true,
         builder: (_) => const Center(child: CircularProgressIndicator()),
       );
-      log('last page');
-      final body = car.toJson(id: isEditMode ? car.carId : null);
-      log('@ body: ' + body.toString());
-      await http
-          .post(
-        Uri.parse(
-            baseUrl + (isEditMode ? '/car/edit_car' : '/car/register_car')),
-        headers: {authorization: AccountChangeHandler().token ?? ''},
-        body: body,
-      )
-          .then((response) {
-        log('@ StatusCode: ${response.statusCode}');
-        if (response.statusCode == 200) {
-          log('@ Response:' + response.body);
-          Map<String, dynamic> json =
-              jsonDecode(utf8.decode(response.bodyBytes));
-          if (json[StatusResponse.key] == StatusResponse.success) {
-            try {
-              car.image = json["image"];
-            } catch (e) {
-              log('@ Error: image key is not exist :(');
-              car.image = "";
-            }
-            if (!isEditMode) {
-              car.carId = json["car_id"] ?? -1;
-              AccountChangeHandler().carIndex = accountBox.length;
-              _addCar();
-              log('finished adding');
-            } else {
-              // int key = accountBox.keyAt(AccountChangeHandler.carIndex ?? 0);
-              accountBox.delete(car.carId);
-              accountBox.put(car.carId, Account(car: car));
-              log('finished editing');
-            }
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-                (route) => false);
-          } else {
-            Navigator.pop(context);
-            showDialog(
-              context: context,
-              builder: (context) =>
-                  _buildAlertDialog(context, 'اطلاعات وارد شده ناقص است'),
-            );
-          }
-        }
-      }).onError((error, stackTrace) {
-        if (error == null) return;
-        Navigator.pop(context);
-        showDialog(
-          context: context,
-          builder: (context) =>
-              _buildAlertDialog(context, 'خطا در ارسال اطلاعات'),
-        );
-      });
+      _confirmCar(context, isEditMode);
     } else {
       currentPage++;
       pageController.nextPage(
@@ -106,27 +98,6 @@ class CarChangeNotifier with ChangeNotifier {
       index,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-    );
-  }
-
-  Widget _buildAlertDialog(BuildContext context, String title) {
-    return AlertDialog(
-      content: Text(title),
-      actions: [
-        TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("تلاش مجدد")),
-        TextButton(
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  (route) => false);
-            },
-            child: const Text("بازگشت")),
-      ],
     );
   }
 }

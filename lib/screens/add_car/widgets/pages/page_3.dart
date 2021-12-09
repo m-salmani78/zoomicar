@@ -93,6 +93,7 @@ Widget numericTextField(
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       onChanged: onChanged,
+      textDirection: TextDirection.ltr,
       decoration: InputDecoration(
         labelText: labelText,
         hintTextDirection: TextDirection.ltr,

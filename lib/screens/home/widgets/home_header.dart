@@ -39,7 +39,7 @@ class HomeHeader extends StatelessWidget {
                         );
                       },
                       errorWidget: (context, url, error) =>
-                          Image.asset('assets/images/no_image.png'),
+                          Image.asset('assets/images/car_sample.png'),
                     ),
             ),
             const Spacer(),

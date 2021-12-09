@@ -51,12 +51,12 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 controller: carHandler.pageController,
                 children: List.generate(widget.pages.length, (index) {
-                  return ListView(
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      const SizedBox(height: 24),
-                      widget.pages[index],
-                    ],
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 32),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: widget.pages[index],
+                    ),
                   );
                 }),
                 onPageChanged: (value) => setState(() {
@@ -64,7 +64,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 }),
               ),
               Positioned(
-                top: 0,
+                top: 4,
                 child: DotsIndicator(
                   count: widget.pages.length,
                   currentPage: currentPage,
@@ -77,7 +77,6 @@ class _AddCarScreenState extends State<AddCarScreen> {
             child: ElevatedButton(
               child: Text(
                 currentPage == widget.pages.length - 1 ? 'تایید' : 'بعدی',
-                // currentPage == widget.pages.length - 1 ? 'Confirm' : 'Next',
                 style: const TextStyle(fontSize: 20),
               ),
               onPressed: () {

@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 class IconBadge extends StatelessWidget {
   final Widget icon;
   final int itemsNum;
+  final String? tooltip;
   final GestureTapCallback? onPressed;
   // ignore: use_key_in_widget_constructors
-  const IconBadge({required this.icon, this.onPressed, this.itemsNum = 0});
+  const IconBadge(
+      {required this.icon, this.onPressed, this.itemsNum = 0, this.tooltip});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      tooltip: tooltip,
       onPressed: onPressed,
       icon: Stack(
         clipBehavior: Clip.none,

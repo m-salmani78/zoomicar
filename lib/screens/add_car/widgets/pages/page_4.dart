@@ -8,24 +8,19 @@ import '/screens/add_car/repos/car_change_notifier.dart';
 
 final Map<String, String> carUseItems = {
   'تمام وقت': '8 ساعت در روز',
-  // 'Full time': '8 hours a day',
   'پرمصرف': 'سالیانه بیش از 50000 کیلومتر یا روزانه بیش از 300 کیلومتر پیمایش',
-  // 'High consumption':'More than 50,000 km per year or more than 300 km per day',
   'متوسط': 'سالیانه مابین 10000 الی 50000 یا روزانه حدود 100 کیلومتر پیمایش',
-  // 'Medium': 'Between 10,000 and 50,000 annually or about 100 km per day',
   'کم مصرف': 'سالیانه کمتر از 10000 کیلومتر یا روزانه 30 کیلومتر پیمایش',
 };
 
 class Page4 extends StatelessWidget implements IAddCarPage {
-  final String hint = '0 Km';
-
   final TextEditingController _controller = TextEditingController();
 
   final BoxShadow _boxShadow = const BoxShadow(
     color: Color.fromARGB(45, 27, 27, 27),
-    blurRadius: 4,
-    spreadRadius: 0,
-    offset: Offset(0.0, 2.0),
+    blurRadius: 3,
+    spreadRadius: -0.5,
+    offset: Offset(-0.5, 2.0),
   );
 
   Page4({Key? key}) : super(key: key);
@@ -37,12 +32,12 @@ class Page4 extends StatelessWidget implements IAddCarPage {
       children: [
         const Text(
           'میزان استفاده از خودرو:',
-          // 'The amount of car use:',
-          style: TextStyle(fontSize: 22),
+          style: TextStyle(fontSize: 18),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         GroupButton(
-          spacing: 16,
+          spacing: 8,
+          groupingType: GroupingType.column,
           borderRadius: BorderRadius.circular(32),
           buttonWidth: MediaQuery.of(context).size.width * 0.6,
           selectedColor: Theme.of(context).colorScheme.primary,
@@ -74,9 +69,7 @@ class Page4 extends StatelessWidget implements IAddCarPage {
       autofocus: true,
       decoration: InputDecoration(
         labelText: 'توضیحات:',
-        // labelText: 'Description:',
         hintText: 'یک مورد را انتخاب کنید.',
-        // hintText: 'Choose an item.',
         floatingLabelBehavior: FloatingLabelBehavior.always,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(cornerRadius),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zoomicar/screens/mechanics/widgets/mechanics_list.dart';
+import 'package:zoomicar/screens/mechanics/widgets/mechanic_item.dart';
 import 'package:zoomicar/utils/services/mechanics_service.dart';
 import '/models/mechanic.dart';
 import '/models/problem_model.dart';
@@ -86,8 +86,11 @@ class _RecommendedMechanicsState extends State<RecommendedMechanics> {
         final mechanic = (index < advertises.length)
             ? advertises[index]
             : mechanics[index - advertises.length];
-        return buildMechanicItem(context,
-            mechanic: mechanic, location: location);
+        return MechanicItemView(
+          mechanic: mechanic,
+          location: location,
+          isAdvertise: index == 0,
+        );
       },
     );
   }

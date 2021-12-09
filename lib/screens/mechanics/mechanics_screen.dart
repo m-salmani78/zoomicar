@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zoomicar/models/mechanic.dart';
+import 'package:zoomicar/screens/filter_screen/filter_screen.dart';
+import 'package:zoomicar/utils/services/mechanic_filter_provider.dart';
 import 'package:zoomicar/utils/services/mechanics_service.dart';
 import '/models/problem_model.dart';
 import '/widgets/icon_badge.dart';
-import 'widgets/mechanics_list.dart';
+import 'widgets/body.dart';
 
 class MechanicsScreen extends StatefulWidget {
   // static const routeName = '/mechanic-screen';
@@ -17,45 +20,44 @@ class MechanicsScreen extends StatefulWidget {
 }
 
 class _MechanicsScreenState extends State<MechanicsScreen> {
-  String filter = '';
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('مکانیکی ها'),
-        actions: [
-          IconBadge(
-            onPressed: () {},
-            icon: const Icon(Icons.filter_alt),
+    return ChangeNotifierProvider(
+      create: (context) => MechanicsFilterProvider.newInstance(),
+      builder: (context, child) {
+        final provider = context.watch<MechanicsFilterProvider>();
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('مکانیکی ها'),
+            actions: [
+              IconBadge(
+                tooltip: 'فیلتر ها',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider.value(
+                      value: MechanicsFilterProvider(),
+                      child: const FilterScreen(),
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.filter_list),
+                itemsNum: provider.filtersNum(),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: CupertinoSearchTextField(
-              onChanged: (value) {
-                setState(() => filter = value);
-              },
-            ),
-          ),
-          const Divider(height: 0),
-          FutureBuilder(
+          body: FutureBuilder(
               future: MechanicsService().getLocation(context),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return _buildLoading();
                 }
                 if (snapshot.hasError) {
-                  return Expanded(
-                    child: Center(
-                      child: TextButton.icon(
-                          onPressed: () => setState(() {}),
-                          icon: const Icon(Icons.place),
-                          label: const Text('GPS را روشن کنید')),
-                    ),
+                  return Center(
+                    child: TextButton.icon(
+                        onPressed: () => setState(() {}),
+                        icon: const Icon(Icons.place),
+                        label: const Text('GPS را روشن کنید')),
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.done) {
@@ -68,55 +70,40 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
                         return _buildLoading();
                       }
                       if (snapshot.hasError) {
-                        return _buildError('اتصال برقرار نیست');
+                        return _buildError();
                       }
-                      final mechanics = snapshot.data as List<Mechanic>;
-                      if (filter.isEmpty) {
-                        return MechanicsList(
-                          mechanics: mechanics
-                              .where((item) =>
-                                  item.tags.contains(widget.problem.tag))
-                              .toList(),
-                          location: customLocation,
-                        );
-                      } else {
-                        return MechanicsList(
-                          mechanics: mechanics
-                              .where((item) => item.name.contains(filter))
-                              .where((item) =>
-                                  item.tags.contains(widget.problem.tag))
-                              .toList(),
-                          location: customLocation,
-                        );
-                      }
+                      final list = snapshot.data as List<Mechanic>;
+                      return Body(
+                        mechanics: provider.getFilteredList(list),
+                        customLocation: customLocation,
+                      );
                     },
                   );
                 }
                 return _buildLoading();
               }),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildLoading() => const Expanded(
-        child: Center(child: CircularProgressIndicator()),
-      );
+  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 
-  Widget _buildError(String title) {
-    return Expanded(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(title),
-            TextButton.icon(
-              onPressed: () => setState(() {}),
-              label: const Text('تلاش مجدد'),
-              icon: const Icon(Icons.refresh),
-            )
-          ],
-        ),
+  Widget _buildError() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/no_wifi.png',
+            width: MediaQuery.of(context).size.width * 0.35,
+          ),
+          TextButton.icon(
+            onPressed: () => setState(() {}),
+            label: const Text('تلاش مجدد'),
+            icon: const Icon(Icons.refresh),
+          )
+        ],
       ),
     );
   }

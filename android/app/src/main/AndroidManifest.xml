@@ -46,11 +46,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <service
-           android:name="me.carda.awesome_notifications.services.ForegroundService"
-           android:enabled="true"
-           android:exported="false"
-           android:foregroundServiceType="microphone|mediaPlayback"
-           android:stopWithTask="true"/>
     </application>
 </manifest>

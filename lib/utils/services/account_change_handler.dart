@@ -35,29 +35,6 @@ class AccountChangeHandler {
     }
   }
 
-  // Future setToken(String? value) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   if (value == null || value.isEmpty) {
-  //     prefs.remove(SharedPrefsKeys.token_key);
-  //     _token = null;
-  //     log('@ I: delete token');
-  //   } else {
-  //     prefs.setString(SharedPrefsKeys.token_key, value);
-  //     _token = value;
-  //   }
-  // }
-
-  // void setUserName(String value, {SharedPreferences? prefs}) {
-  //   _userName = value;
-  //   if (prefs == null) {
-  //     SharedPreferences.getInstance().then((prefs) {
-  //       setUserName(value, prefs: prefs);
-  //     });
-  //   } else {
-  //     prefs.setString(userNameKey, value);
-  //   }
-  // }
-
   Future setAccount({required String token, required String userName}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(SharedPrefsKeys.token_key, token);

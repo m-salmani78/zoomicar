@@ -42,7 +42,7 @@ class MechanicDetailsScreen extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
-                  Container(color: Colors.white),
+                  Container(color: Colors.white60),
                   CachedNetworkImage(
                     imageUrl: baseUrl + mechanic.image,
                     fit: BoxFit.cover,
@@ -54,8 +54,9 @@ class MechanicDetailsScreen extends StatelessWidget {
                     },
                     errorWidget: (context, url, error) => Center(
                       child: SvgPicture.asset(
-                        'assets/icons/no-wifi.svg',
+                        'assets/icons/image-not-found.svg',
                         width: MediaQuery.of(context).size.width * 0.4,
+                        color: Colors.grey,
                       ),
                     ),
                   ),

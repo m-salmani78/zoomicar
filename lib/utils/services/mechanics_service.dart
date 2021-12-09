@@ -26,18 +26,9 @@ class MechanicsService extends ChangeNotifier {
         PermissionStatus permissionStatus = await location.requestPermission();
         bool result = permissionStatus == PermissionStatus.granted;
         if (!result) {
-          showWarningSnackBar(
-            context,
-            message:
-                'برای ارائه خدمات بهتر لطفا اجازه دسترسی به مکان را تایید کنید.',
-            // action: SnackBarAction(
-            //   label: 'انجام',
-            //   textColor: Colors.white,
-            //   onPressed: () async {
-            //     permissionStatus = await location.requestPermission();
-            //   },
-            // ),
-          );
+          showWarningSnackBar(context,
+              message:
+                  'برای ارائه خدمات بهتر لطفا اجازه دسترسی به مکان را تایید کنید.');
           throw Exception();
         }
       }

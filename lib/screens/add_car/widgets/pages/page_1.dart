@@ -36,6 +36,7 @@ class _Page1State extends State<Page1> {
       key: widget._formKey,
       child: Column(
         children: [
+          const SizedBox(height: 8),
           ChooseCarParameter(
             onFind: (filter) async {
               var response =
@@ -57,7 +58,7 @@ class _Page1State extends State<Page1> {
               }
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           ChooseCarParameter(
             onFind: (filter) async {
               var response =
@@ -88,7 +89,7 @@ class _Page1State extends State<Page1> {
               }
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           _buildKilometer(
             carHandler,
             onChanged: (value) {
@@ -99,7 +100,7 @@ class _Page1State extends State<Page1> {
               }
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           ThirdPartyInsurance(
             initialValue: carHandler.car.thirdPartyInsurance != null
                 ? shamsiToString(carHandler.car.thirdPartyInsurance!)
@@ -129,10 +130,11 @@ class _Page1State extends State<Page1> {
                 : notifier.car.kilometerage.toString(),
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            textDirection: TextDirection.ltr,
             decoration: const InputDecoration(
               hintTextDirection: TextDirection.ltr,
               hintText: '0 Km',
-              contentPadding: EdgeInsets.symmetric(horizontal: 12),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) return requiredInputError;

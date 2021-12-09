@@ -41,10 +41,11 @@ class Mechanic {
   final CustomLocation location;
   final List<String> tags;
   final int userRate;
-  // final bool advertise;
+  double? _distance;
 
   double getDistance(CustomLocation location) {
-    return calculateDistance(this.location, location);
+    _distance ??= calculateDistance(this.location, location);
+    return _distance!;
   }
 
   factory Mechanic.fromJson(Map<String, dynamic> json) => Mechanic(
