@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zoomicar/screens/webview_screen/webview_screen.dart';
 
 class NotificationsMenuItems extends StatelessWidget {
   const NotificationsMenuItems({Key? key}) : super(key: key);
@@ -25,10 +26,16 @@ class NotificationsMenuItems extends StatelessWidget {
             ),
           ),
           _buildItem(
-            'خودتان اضافه کنید',
-            avatar: const Icon(Icons.add_alert),
+            'دانشنامه',
+            avatar: const Icon(Icons.science),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (context) {
+                  return const WebViewPage(
+                      url:
+                          'https://fa.wikipedia.org/wiki/%D8%AE%D9%88%D8%AF%D8%B1%D9%88%DB%8C_%D8%A8%D8%B1%D9%82%DB%8C');
+                },
+              ));
             },
           ),
         ],

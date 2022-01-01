@@ -92,7 +92,7 @@ class _BodyState extends State<Body> {
           const SizedBox(width: 4),
           _buildChip(
             context,
-            label: 'پیشنهادها',
+            label: 'دانستنی ها',
             avatar: (Icons.local_offer_outlined),
             selected: _selctedItem == 2,
             onSelected: (selected) {

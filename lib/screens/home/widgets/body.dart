@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:zoomicar/screens/webview_screen/webview_screen.dart';
 import '/constants/app_constants.dart';
 import '/main.dart';
 import '/models/problem_model.dart';
@@ -54,8 +53,8 @@ class _BodyState extends State<Body> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: size.height * 0.45),
+            SizedBox(
+              height: size.height * 0.4,
               child: HomeHeader(account?.car),
             ),
             account == null
@@ -68,6 +67,23 @@ class _BodyState extends State<Body> {
                     ),
                   )
                 : _buildExploreItems(context, account: account),
+            Container(
+              padding: const EdgeInsets.all(8),
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const WebViewPage(
+                          url:
+                              'https://fa.wikipedia.org/wiki/%D8%AE%D9%88%D8%AF%D8%B1%D9%88%DB%8C_%D9%87%DB%8C%D8%A8%D8%B1%DB%8C%D8%AF%DB%8C');
+                    },
+                  ));
+                },
+                label: const Text('مقالات علمی'),
+                icon: const Icon(Icons.public),
+              ),
+            )
           ],
         ),
       ),
@@ -78,12 +94,14 @@ class _BodyState extends State<Body> {
     return AppBar(
       title: const AppName(),
       leading: IconButton(
+        tooltip: 'تنظیمات',
         icon: const Icon(Icons.settings),
         onPressed: () => Navigator.push(context,
             MaterialPageRoute(builder: (context) => const SettingsScreen())),
       ),
       actions: [
         IconBadge(
+          tooltip: 'اعلانات',
           onPressed: account == null
               ? null
               : () {
@@ -124,6 +142,9 @@ class _BodyState extends State<Body> {
             name: 'قطعات خودرو',
             onPressedViewAll: () => _onPressedViewAll(context),
             children: account.problems
+                .where((e) =>
+                    e.problemStatus == ProblemStatus.urgent ||
+                    e.problemStatus == ProblemStatus.critical)
                 .map((e) => ProblemCardView(problem: e))
                 .toList(),
           )
@@ -161,6 +182,9 @@ class _BodyState extends State<Body> {
                     name: 'قطعات خودرو',
                     onPressedViewAll: () => _onPressedViewAll(context),
                     children: problems
+                        .where((e) =>
+                            e.problemStatus == ProblemStatus.urgent ||
+                            e.problemStatus == ProblemStatus.critical)
                         .map((e) => ProblemCardView(problem: e))
                         .toList(),
                   );

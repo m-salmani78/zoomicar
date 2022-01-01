@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zoomicar/widgets/circular_percent_indicator.dart';
 import '/models/problem_model.dart';
@@ -32,19 +31,19 @@ class ProblemScreen extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: problem.problemStatus == ProblemStatus.none
-                      ? null
-                      : () async {
-                          showDialog(
-                            context: context,
-                            builder: (context) => MarkCompleteDialog(
-                              carId: problem.carId,
-                              tag: problem.tag,
-                            ),
-                          );
-                        },
+                  onPressed:
+                      problem.problemStatus.index >= ProblemStatus.fair.index
+                          ? null
+                          : () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) => MarkCompleteDialog(
+                                  carId: problem.carId,
+                                  tag: problem.tag,
+                                ),
+                              );
+                            },
                   child: const Text('انجام شد'),
-                  // child: Text('Mark Complete'),
                 ),
               ),
               const SizedBox(width: 8),
@@ -113,11 +112,13 @@ class ProblemScreen extends StatelessWidget {
           progressColor: problem.color,
         ),
         const SizedBox(height: 8),
-        Text(
-          "سطح روغن ماشین شما کم است. برای از بین بردن اصطکاک و گرم شدن بیش از حد ، روغن موتور را تعویض کنید.",
-          style: Theme.of(context).textTheme.caption,
-          textAlign: TextAlign.center,
-        ),
+        if (problem.problemStatus == ProblemStatus.urgent ||
+            problem.problemStatus == ProblemStatus.critical)
+          Text(
+            "سطح روغن ماشین شما کم است. برای از بین بردن اصطکاک و گرم شدن بیش از حد ، روغن موتور را تعویض کنید.",
+            style: Theme.of(context).textTheme.caption,
+            textAlign: TextAlign.center,
+          ),
       ],
     );
   }

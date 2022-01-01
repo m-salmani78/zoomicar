@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zoomicar/screens/webview_screen/webview_screen.dart';
 import '/constants/app_constants.dart';
 import '/models/brand_model.dart';
 import '../../../constants/api_keys.dart';
@@ -39,48 +40,65 @@ class BrandList extends StatelessWidget {
 
   Widget _buildItem(BuildContext context, Brand brand) {
     return Card(
-      margin: const EdgeInsets.all(8),
+      // margin: const EdgeInsets.all(8),
       elevation: defaultElevation,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cornerRadius)),
-      child: Row(
-        children: [
-          const SizedBox(width: 8),
-          Image.network(baseUrl + brand.image,
-              width: 72, height: 72, fit: BoxFit.fill),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Row(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 8, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              children: [
+                Image.network(baseUrl + brand.image,
+                    width: 72, height: 72, fit: BoxFit.fill),
+                const SizedBox(width: 12),
+                Flexible(
+                  child: Column(
                     children: [
-                      Text(
-                        brand.name,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                      Row(
+                        children: [
+                          Text(
+                            brand.name,
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const Spacer(),
+                          Text('قیمت ${brand.price}',
+                              style: Theme.of(context).textTheme.caption),
+                        ],
                       ),
-                      const Spacer(),
-                      Text('قیمت ${brand.price}',
-                          style: Theme.of(context).textTheme.caption),
+                      const SizedBox(height: 8),
+                      ReadMoreText(
+                        brand.description,
+                        style: const TextStyle(fontSize: 14),
+                        textAlign: TextAlign.justify,
+                        trimLines: 2,
+                        trimMode: TrimMode.Line,
+                        trimCollapsedText: 'بیشتر',
+                        trimExpandedText: 'کمتر',
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  ReadMoreText(
-                    brand.description,
-                    style: const TextStyle(fontSize: 14),
-                    textAlign: TextAlign.justify,
-                    trimLines: 2,
-                    trimMode: TrimMode.Line,
-                    trimCollapsedText: 'بیشتر',
-                    trimExpandedText: 'کمتر',
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 8),
+              ],
             ),
-          ),
-        ],
+            TextButton(
+              onPressed: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WebViewPage(
+                          url: 'https://speedy.iranecar.com/'),
+                    ));
+              },
+              child: const Text('مشاهده سایت'),
+            )
+          ],
+        ),
       ),
     );
   }

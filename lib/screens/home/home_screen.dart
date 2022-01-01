@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
               if (snapshot.hasError) return const Body(account: null);
               if (snapshot.connectionState == ConnectionState.done) {
                 final response = snapshot.data as http.Response;
-                log('@ StatusCode: ${response.statusCode}');
                 log('@ Response: ${response.body}');
                 if (response.statusCode == 200) {
                   List json = jsonDecode(utf8.decode(response.bodyBytes));
@@ -59,4 +58,3 @@ class _HomeScreenState extends State<HomeScreen> {
         : Body(account: accountBox.getAt(index));
   }
 }
-//Token 15943417648f7394260d7d021404323b2aa0e2ed
