@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zoomicar/constants/app_constants.dart';
 import '/models/mechanic.dart';
 import '/models/problem_model.dart';
 import '/screens/map/map_screen.dart';
@@ -26,6 +27,8 @@ class MechanicDetailsScreen extends StatelessWidget {
             pinned: true,
             stretch: true,
             elevation: 4,
+            foregroundColor: Colors.white,
+            systemOverlayStyle: SystemUiOverlayStyle.light,
             iconTheme: const IconThemeData(color: Colors.white),
             expandedHeight: 250.0,
             excludeHeaderSemantics: true,
@@ -37,8 +40,18 @@ class MechanicDetailsScreen extends StatelessWidget {
                 StretchMode.fadeTitle,
               ],
               centerTitle: true,
-              title:
-                  const Text('تعمیرگاه', style: TextStyle(color: Colors.white)),
+              title: Text(
+                mechanic.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                        blurRadius: 1,
+                        offset: shadowOffset,
+                        color: Colors.black38)
+                  ],
+                ),
+              ),
               background: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
@@ -55,8 +68,8 @@ class MechanicDetailsScreen extends StatelessWidget {
                     errorWidget: (context, url, error) => Center(
                       child: SvgPicture.asset(
                         'assets/icons/image-not-found.svg',
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        color: Colors.grey,
+                        width: MediaQuery.of(context).size.width * 0.35,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -66,10 +79,10 @@ class MechanicDetailsScreen extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: <Color>[
-                          Color(0x80000000),
+                          Color(0x90000000),
                           Colors.transparent,
                           Colors.transparent,
-                          Color(0x60000000),
+                          Color(0x20000000),
                         ],
                       ),
                     ),
@@ -153,7 +166,10 @@ class MechanicDetailsScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return MapScreen(location: mechanic.location);
+                      return MapScreen(
+                        location: mechanic.location,
+                        mechanic: mechanic,
+                      );
                     },
                   ));
                 },

@@ -14,6 +14,7 @@ class NotifButtonKey {
   static String repeate = 'NOTIF_ME_AGAIN';
 }
 
+const shadowOffset = Offset(-0.2, 0.3);
 const textShadow = [
-  Shadow(blurRadius: 4, offset: Offset(-0.2, 0.3), color: Colors.black45),
+  Shadow(blurRadius: 4, offset: shadowOffset, color: Colors.black45),
 ];

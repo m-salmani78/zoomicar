@@ -148,6 +148,28 @@ class Car {
         lastTimingbeltChange: lastTimingbeltChange,
         lastTireChange: lastTireChange,
       );
+
+  int? getParamWithTag(String tag) {
+    switch (tag) {
+      case 'oil_filter':
+        return lastOilFilterChange;
+      case 'gasoline_filter':
+        return lastGasolineFilterChange;
+      case 'air_filter':
+        return lastAirFilterChange;
+      case 'tire':
+        return lastTireChange;
+      case 'engine_oil':
+        return lastEngineOilChange;
+      case 'gearbox_oil':
+        return lastGearboxOilChange;
+      case 'brakepad':
+        return lastBrakepadChange;
+      case 'timingbelt':
+        return lastTimingbeltChange;
+    }
+  }
+
   bool editParamWithTag({required String tag, required int value}) {
     switch (tag) {
       case 'oil_filter':

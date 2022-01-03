@@ -1,26 +1,148 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:zoomicar/constants/app_constants.dart';
 import '/models/mechanic.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
-class MapScreen extends StatelessWidget {
+class MapScreen extends StatefulWidget {
   final CustomLocation location;
-  const MapScreen({Key? key, required this.location}) : super(key: key);
+  final Mechanic mechanic;
+  const MapScreen({
+    Key? key,
+    required this.location,
+    required this.mechanic,
+  }) : super(key: key);
+
+  @override
+  State<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  bool trafficEnabled = false;
+  bool hybridType = false;
+  @override
+  void initState() {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final latLng = LatLng(location.lat, location.long);
+    // late GoogleMapController mapController;
+    final latLng = LatLng(widget.location.lat, widget.location.long);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('نقشه', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'نقشه',
+          style: TextStyle(
+            color: Colors.white,
+            shadows: [
+              Shadow(blurRadius: 1, offset: shadowOffset, color: Colors.black38)
+            ],
+          ),
+        ),
+        actions: [
+          PopupMenuButton(
+            icon: const Icon(Icons.more_vert),
+            tooltip: 'موارد بیشتر',
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(cornerRadius),
+            ),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                padding: EdgeInsets.zero,
+                child: CheckboxListTile(
+                  dense: true,
+                  value: trafficEnabled,
+                  onChanged: (value) => setState(() {
+                    trafficEnabled = value ?? false;
+                    Navigator.pop(context);
+                  }),
+                  title: const Text('نمایش ترافیک شهری'),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+              ),
+              PopupMenuItem(
+                padding: EdgeInsets.zero,
+                child: CheckboxListTile(
+                  dense: true,
+                  value: hybridType,
+                  onChanged: (value) => setState(() {
+                    hybridType = value ?? false;
+                    Navigator.pop(context);
+                  }),
+                  title: const Text('تصاویر ماهواره ای'),
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+              ),
+            ],
+          ),
+        ],
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).colorScheme.primary,
-        elevation: 4,
+        elevation: 3,
       ),
-      body: FlutterMap(
+      body: SafeArea(
+        child: GoogleMap(
+          padding: const EdgeInsets.only(bottom: 64),
+          onMapCreated: (controller) {
+            // mapController = controller;
+            setState(() {});
+          },
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
+          mapType: hybridType ? MapType.hybrid : MapType.normal,
+          trafficEnabled: trafficEnabled,
+          initialCameraPosition: CameraPosition(
+            target: latLng,
+            zoom: 15.0,
+          ),
+          markers: {
+            Marker(
+              markerId: MarkerId('${widget.mechanic.id}'),
+              position: latLng,
+              infoWindow: InfoWindow(title: widget.mechanic.name),
+            )
+          },
+        ),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
+      floatingActionButton: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: ElevatedButton.icon(
+            onPressed: () {
+              try {
+                _launchMaps();
+              } catch (e) {
+                log('Could not launch url');
+              }
+            },
+            icon: const Icon(Icons.directions),
+            label: const Text('مسیریابی')),
+      ),
+    );
+  }
+
+  _launchMaps() async {
+    String googleUrl =
+        'https://www.google.com/maps/search/?api=1&query=${widget.location.lat},${widget.location.long}';
+    if (await canLaunch(googleUrl)) {
+      await launch(googleUrl);
+    } else {
+      throw 'Could not open the map.';
+    }
+  }
+}
+
+/*
+FlutterMap(
         options: MapOptions(
           center: latLng,
           zoom: 13.0,
@@ -43,45 +165,5 @@ class MapScreen extends StatelessWidget {
             ],
           ),
         ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: ConstrainedBox(
-        constraints:
-            BoxConstraints(minWidth: MediaQuery.of(context).size.width - 32),
-        child: ElevatedButton.icon(
-            onPressed: () {
-              try {
-                _launchMaps();
-              } catch (e) {
-                log('Could not launch url');
-              }
-            },
-            icon: const Icon(Icons.directions),
-            label: const Text('مسیریابی')),
-      ),
-    );
-  }
-
-  _launchMaps() async {
-    // String googleUrl =
-    //     'comgooglemaps://?center=${location.lat},${location.long}';
-    // String appleUrl =
-    //     'https://maps.apple.com/?sll=${location.lat},${location.long}';
-    // if (await canLaunch("comgooglemaps://")) {
-    //   log('launching com googleUrl');
-    //   await launch(googleUrl);
-    // } else if (await canLaunch(appleUrl)) {
-    //   log('launching apple url');
-    //   await launch(appleUrl);
-    // } else {
-    //   throw 'Could not launch url';
-    // }
-    String googleUrl =
-        'https://www.google.com/maps/search/?api=1&query=${location.lat},${location.long}';
-    if (await canLaunch(googleUrl)) {
-      await launch(googleUrl);
-    } else {
-      throw 'Could not open the map.';
-    }
-  }
-}
+      )
+*/

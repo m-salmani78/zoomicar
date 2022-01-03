@@ -21,7 +21,7 @@ class VerifyPhoneScreen extends StatefulWidget {
   State<VerifyPhoneScreen> createState() => _VerifyPhoneScreenState();
 }
 
-const waitingTime = 120;
+const waitingTime = 180;
 
 class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   int _timeRemainder = waitingTime;
