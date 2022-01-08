@@ -1,27 +1,24 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:zoomicar/utils/helpers/show_snack_bar.dart';
 import 'package:zoomicar/utils/services/auth_provider.dart';
 
-import 'widgets/verification_code_input.dart';
+import 'widgets/autofill_text_field.dart';
 
 class VerifyPhoneScreen extends StatefulWidget {
-  final String mobile;
   final bool isRegister;
   final AuthProvider provider;
   const VerifyPhoneScreen(
-      {Key? key,
-      required this.mobile,
-      required this.provider,
-      required this.isRegister})
+      {Key? key, required this.provider, required this.isRegister})
       : super(key: key);
 
   @override
   State<VerifyPhoneScreen> createState() => _VerifyPhoneScreenState();
 }
 
-const waitingTime = 180;
+const waitingTime = 120;
 
 class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
   int _timeRemainder = waitingTime;
@@ -47,12 +44,13 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
         child: Column(
           children: [
             const Spacer(),
-            Text('پیامک به شماره ${widget.mobile} ارسال شد.'),
+            Text('پیامک به شماره ${widget.provider.mobile} ارسال شد.'),
             const Spacer(),
-            VerificationCodeInput(onCompleted: (value) {
+            AutoFillTextField(onCompleted: (value) {
+              log('value:  $value', name: 'onCompleted');
               _code = value;
               widget.provider.verifyCode(context,
-                  type: type, mobile: widget.mobile, code: _code!);
+                  type: type, mobile: widget.provider.mobile, code: _code!);
             }),
             const SizedBox(height: 16),
             _isTimeEnd
@@ -61,23 +59,24 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
             const Spacer(),
             if (widget.provider.isLoading) const CircularProgressIndicator(),
             const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  if (_code == null) {
-                    showWarningSnackBar(context,
-                        message: 'کد را بصورت کامل وارد کنید.');
-                    return;
-                  }
-                  widget.provider.verifyCode(context,
-                      type: type, mobile: widget.mobile, code: _code!);
-                },
-                label: const Text('ادامه'),
-                icon: const Icon(Icons.arrow_back_rounded),
-              ),
-            ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: () {
+            if (_code == null) {
+              showWarningSnackBar(context,
+                  message: 'کد را بصورت کامل وارد کنید.');
+              return;
+            }
+            widget.provider.verifyCode(context,
+                type: type, mobile: widget.provider.mobile, code: _code!);
+          },
+          label: const Text('ادامه'),
+          icon: const Icon(Icons.arrow_back_rounded),
         ),
       ),
     );
@@ -91,7 +90,6 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
         TextButton(
           onPressed: () => widget.provider.login(
             context,
-            mobile: widget.mobile,
             onReceived: () => setState(() {
               _isTimeEnd = false;
               _timeRemainder = waitingTime;
@@ -103,14 +101,6 @@ class _VerifyPhoneScreenState extends State<VerifyPhoneScreen> {
       ],
     );
   }
-
-  // Future<void> resendCode(var context) async {
-  //   FormData formData = FormData.fromMap({
-  //     "phone": widget.mobile,
-  //   });
-  //   response = await dio.post(baseURL + "/account/resend_code", data: formData);
-  //   // print(response.data.toString());
-  // }
 
   Timer startTimer() {
     return Timer.periodic(const Duration(seconds: 1), (timer) {

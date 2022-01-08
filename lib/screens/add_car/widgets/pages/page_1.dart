@@ -45,7 +45,7 @@ class _Page1State extends State<Page1> {
               final json = jsonDecode(utf8.decode(response.bodyBytes));
               final names = (json[0] as List).map((e) => e.toString()).toList();
               return names
-                  .where((item) => item.toString().contains(filter))
+                  .where((item) => item.toString().contains(filter ?? ''))
                   .toList();
             },
             hint: 'برند خودرو*',
@@ -71,7 +71,7 @@ class _Page1State extends State<Page1> {
                     .toList();
                 return names
                     .map((e) => e.toString())
-                    .where((item) => item.contains(filter))
+                    .where((item) => item.contains(filter ?? ''))
                     .toList();
               } catch (e) {
                 return [];

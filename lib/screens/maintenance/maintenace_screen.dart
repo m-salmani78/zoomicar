@@ -26,17 +26,12 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('قطعات خودرو'),
-        // title: Text('Maintenance'),
-      ),
+      appBar: AppBar(title: const Text('قطعات خودرو')),
       body: FutureBuilder(
         future: http.post(Uri.parse(baseUrl + '/car/notifications'),
             headers: {authorization: AccountChangeHandler().token ?? ''},
             body: {"car_id": widget.car.carId.toString()}),
         builder: (context, snapshot) {
-          // log('@ Connection State: ${snapshot.connectionState}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -87,7 +82,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
         borderRadius: BorderRadius.circular(cornerRadius),
       ),
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
+      child: ListTile(
         onTap: () {
           Navigator.push(
             context,
@@ -96,31 +91,20 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             ),
           );
         },
-        child: Column(
-          children: [
-            ListTile(
-              leading: Hero(
-                  tag: problem.hashCode,
-                  child: Image.asset(
-                    problem.imageAssetAddress,
-                    height: 48,
-                    width: 48,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Image.asset('assets/images/ic-engine-oil-filled.png'),
-                  )),
-              title: Text(problem.title),
-              trailing: StatusLabel(problemStatus: problem.problemStatus),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Text(
-                "سطح روغن ماشین شما کم است. برای از بین بردن اصطکاک و گرم شدن بیش از حد ، روغن موتور را تعویض کنید.",
-                textAlign: TextAlign.justify,
-              ),
-            ),
-          ],
+        leading: Hero(
+            tag: problem.hashCode,
+            child: Image.asset(
+              problem.imageAssetAddress,
+              height: 48,
+              width: 48,
+              fit: BoxFit.cover,
+            )),
+        title: Text(problem.title),
+        subtitle: Text(
+          'آخرین تعویض در کیلومتر ${widget.car.getParamWithTag(problem.tag)}',
+          style: const TextStyle(fontSize: 14),
         ),
+        trailing: StatusLabel(problemStatus: problem.problemStatus),
       ),
     );
   }

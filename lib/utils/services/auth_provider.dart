@@ -12,14 +12,19 @@ class AuthProvider extends ChangeNotifier {
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: baseUrl + '/account',
-      connectTimeout: 4000,
+      connectTimeout: 6000,
       receiveTimeout: 4000,
     ),
   );
   bool isLoading = false;
+  String mobile = '';
+  String username = '';
 
   void login(BuildContext context,
-      {required String mobile, required void Function() onReceived}) async {
+      {required void Function() onReceived}) async {
+    if (formKey.currentState == null || !formKey.currentState!.validate()) {
+      return;
+    }
     isLoading = true;
     notifyListeners();
     try {
@@ -46,16 +51,17 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void register(BuildContext context,
-      {required String mobile,
-      required String userName,
-      required void Function() onReceived}) async {
+      {required void Function() onReceived}) async {
+    if (formKey.currentState == null || !formKey.currentState!.validate()) {
+      return;
+    }
     isLoading = true;
     notifyListeners();
     try {
       log('mobile = $mobile');
-      log('username = $userName');
+      log('username = $username');
       FormData formData =
-          FormData.fromMap({"mobile": mobile, "username": userName});
+          FormData.fromMap({"mobile": mobile, "username": username});
       Response response = await dio.post(
         '/register',
         data: formData,

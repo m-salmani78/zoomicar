@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zoomicar/constants/app_constants.dart';
+import 'package:zoomicar/screens/verify_phone_screen/verify_phone_screen.dart';
 import 'package:zoomicar/utils/services/auth_provider.dart';
 import '/config/themes/theme_config.dart';
 import '/widgets/fade_animation.dart';
@@ -21,10 +22,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final viewInsets = MediaQuery.of(context).viewInsets;
     final size = MediaQuery.of(context).size;
     return Stack(children: [
-      Container(
-          color: Theme.of(context).colorScheme.primary,
-          width: double.infinity,
-          height: double.infinity),
+      Column(
+        children: [
+          Expanded(
+            child: Container(
+                color: Theme.of(context).colorScheme.primary,
+                width: double.infinity),
+          ),
+          Expanded(
+            child: Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                width: double.infinity),
+          ),
+        ],
+      ),
       SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(right: 12, top: 16),
@@ -38,30 +49,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ),
-      Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
-          title: viewInsets.bottom > 0
-              ? const Text('ثبت نام', style: TextStyle(shadows: textShadow))
-              : null,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Provider.of<ThemeChangeHandler>(context, listen: false)
-                    .toggleTheme(context);
-              },
-              icon: Icon(Theme.of(context).brightness == Brightness.dark
-                  ? Icons.light_mode_rounded
-                  : Icons.dark_mode_rounded),
-            )
-          ],
-        ),
-        body: ChangeNotifierProvider(
-          create: (context) => AuthProvider(),
-          builder: (context, child) {
-            return Column(
+      ChangeNotifierProvider(
+        create: (context) => AuthProvider(),
+        builder: (context, child) {
+          final provider = context.watch<AuthProvider>();
+          return Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              title: viewInsets.bottom > 0
+                  ? const Text('ثبت نام', style: TextStyle(shadows: textShadow))
+                  : null,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Provider.of<ThemeChangeHandler>(context, listen: false)
+                        .toggleTheme(context);
+                  },
+                  icon: Icon(Theme.of(context).brightness == Brightness.dark
+                      ? Icons.light_mode_rounded
+                      : Icons.dark_mode_rounded),
+                )
+              ],
+            ),
+            body: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (viewInsets.bottom <= 0)
@@ -92,10 +104,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 const Expanded(child: Body()),
               ],
-            );
-          },
-        ),
-      )
+            ),
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: FadeAnimation(
+                delay: 0.7,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: provider.isLoading
+                        ? null
+                        : () {
+                            registerAction(context, provider: provider);
+                          },
+                    child: const Text('ثبت نام'),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     ]);
   }
+}
+
+registerAction(BuildContext context, {required AuthProvider provider}) {
+  provider.register(
+    context,
+    onReceived: () async {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              VerifyPhoneScreen(isRegister: true, provider: provider),
+        ),
+      );
+    },
+  );
 }

@@ -11,7 +11,6 @@ class ChooseCarParameter extends StatefulWidget {
 
   const ChooseCarParameter({
     Key? key,
-    // required this.items,
     required this.onFind,
     this.hint,
     required this.onChanged,
@@ -27,21 +26,21 @@ class _ChooseCarParameterState extends State<ChooseCarParameter> {
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<String>(
-      mode: Mode.DIALOG,
+      mode: Mode.MENU,
       selectedItem: widget.initialValue,
       showSearchBox: true,
       showClearButton: true,
-      showSelectedItem: true,
+      showSelectedItems: true,
       showAsSuffixIcons: true,
-      label: widget.hint,
-      hint: 'یک مورد را انتخاب کنید',
-      // hint: 'Select an item',
       onFind: widget.onFind,
-      itemAsString: (item) => item,
+      itemAsString: (item) => item ?? '',
       onChanged: widget.onChanged,
-      dropdownSearchDecoration: const InputDecoration(
+      dropdownSearchDecoration: InputDecoration(
+        labelText: widget.hint,
+        hintText: 'یک مورد را انتخاب کنید',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
-        contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
       ),
       validator: widget.validator,
     );

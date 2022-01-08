@@ -27,7 +27,6 @@ class ExploreItems extends StatelessWidget {
               TextButton(
                 style: const ButtonStyle(visualDensity: VisualDensity.compact),
                 child: const Text('همه'),
-                // child: Text('View All'),
                 onPressed: onPressedViewAll,
               ),
             ],
@@ -36,12 +35,11 @@ class ExploreItems extends StatelessWidget {
         children.isEmpty
             ? Container(
                 height: 200,
-                color: Theme.of(context).colorScheme.primary.withOpacity(.02),
-                child: const Center(
+                color: Theme.of(context).colorScheme.primary.withOpacity(.01),
+                child: Center(
                     child: Text(
                   'موردی برای نمایش وجود ندارد',
-                  // 'nothing to show',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.caption,
                 )),
               )
             : SingleChildScrollView(

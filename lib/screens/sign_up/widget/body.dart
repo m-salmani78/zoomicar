@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zoomicar/constants/app_constants.dart';
-import 'package:zoomicar/screens/verify_phone_screen/verify_phone_screen.dart';
+import 'package:zoomicar/screens/sign_up/sign_up_screen.dart';
 import 'package:zoomicar/utils/services/auth_provider.dart';
 import 'package:zoomicar/widgets/custom_text_field.dart';
 import 'package:zoomicar/widgets/fade_animation.dart';
@@ -16,96 +14,58 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-  final _formKey = GlobalKey<FormState>();
-
-  String userName = '';
-
-  String mobile = '';
-
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
     final provider = context.watch<AuthProvider>();
     return Container(
       clipBehavior: Clip.antiAlias,
+      padding: const EdgeInsets.all(16),
       decoration: customBoxDecoration(context),
       child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              SizedBox(height: screenSize.height * 0.12),
-              FadeAnimation(delay: 0.5, child: _buildUserName(context)),
-              const SizedBox(height: 24),
-              FadeAnimation(
-                  delay: 0.6,
-                  child: buildPhoneNumber(context,
-                      onChanged: (value) => mobile = value)),
-              SizedBox(height: screenSize.height * 0.06),
-              if (provider.isLoading) const CircularProgressIndicator(),
-              SizedBox(height: screenSize.height * 0.06),
-              FadeAnimation(
-                delay: 0.7,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: _buildConfirmButton(provider),
-                ),
-              ),
-            ],
-          ),
+        key: provider.formKey,
+        child: Column(
+          children: [
+            const Spacer(),
+            FadeAnimation(delay: 0.5, child: _buildUserName(context, provider)),
+            const SizedBox(height: 24),
+            FadeAnimation(
+              delay: 0.6,
+              child: buildPhoneNumber(context,
+                  onSubmeted: (value) {
+                    registerAction(context, provider: provider);
+                  },
+                  onChanged: (value) => provider.mobile = value),
+            ),
+            Expanded(
+              child: Center(
+                  child: provider.isLoading
+                      ? const CircularProgressIndicator()
+                      : null),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildUserName(BuildContext context) {
+  Widget _buildUserName(BuildContext context, AuthProvider provider) {
     return TextFormField(
-      onChanged: (value) => userName = value,
+      onChanged: (value) => provider.username = value,
       maxLength: 20,
       decoration: customInputDecoration(
         context,
         hint: 'نام کاربری',
         icon: const Icon(Icons.person_rounded),
       ),
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.name,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return requiredInputError;
+        } else if (value.contains(RegExp(r'[A-Z|a-z]'))) {
+          return 'لطفا فقط از حروف فارسی استفاده کنید';
         }
       },
-    );
-  }
-
-  Widget _buildConfirmButton(AuthProvider provider) {
-    return ElevatedButton(
-      onPressed: provider.isLoading
-          ? null
-          : () {
-              if (_formKey.currentState == null) {
-                log('currentState == null');
-                return;
-              }
-              if (_formKey.currentState!.validate()) {
-                provider.register(
-                  context,
-                  mobile: mobile,
-                  userName: userName,
-                  onReceived: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VerifyPhoneScreen(
-                          isRegister: true,
-                          mobile: mobile,
-                          provider: provider,
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }
-            },
-      child: const Text('ثبت نام'),
     );
   }
 }
