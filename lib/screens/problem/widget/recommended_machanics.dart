@@ -89,7 +89,6 @@ class _RecommendedMechanicsState extends State<RecommendedMechanics> {
         return MechanicItemView(
           mechanic: mechanic,
           location: location,
-          isAdvertise: index == 0,
         );
       },
     );

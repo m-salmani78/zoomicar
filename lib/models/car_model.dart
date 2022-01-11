@@ -9,7 +9,14 @@ Car carFromJson(String str) => Car.fromJson(json.decode(str));
 
 String carToJson(Car data) => json.encode(data.toJson());
 
-enum CarUseAmount { fullTime, highConsumption, medium, lowConsumption }
+enum CarUseAmount { lowConsumption, medium, highConsumption, fullTime }
+
+const Map<String, String> carUseItems = {
+  'کم مصرف': 'سالیانه کمتر از 10000 کیلومتر یا روزانه 30 کیلومتر پیمایش',
+  'متوسط': 'سالیانه مابین 10000 الی 50000 یا روزانه حدود 100 کیلومتر پیمایش',
+  'پرمصرف': 'سالیانه بیش از 50000 کیلومتر یا روزانه بیش از 300 کیلومتر پیمایش',
+  'تمام وقت': '8 ساعت در روز',
+};
 
 String shamsiToString(Jalali value) {
   return "${value.year}/${value.month}/${value.day}";

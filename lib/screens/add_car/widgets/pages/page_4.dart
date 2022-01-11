@@ -6,13 +6,6 @@ import 'package:provider/provider.dart';
 import '/constants/app_constants.dart';
 import '/screens/add_car/repos/car_change_notifier.dart';
 
-final Map<String, String> carUseItems = {
-  'تمام وقت': '8 ساعت در روز',
-  'پرمصرف': 'سالیانه بیش از 50000 کیلومتر یا روزانه بیش از 300 کیلومتر پیمایش',
-  'متوسط': 'سالیانه مابین 10000 الی 50000 یا روزانه حدود 100 کیلومتر پیمایش',
-  'کم مصرف': 'سالیانه کمتر از 10000 کیلومتر یا روزانه 30 کیلومتر پیمایش',
-};
-
 class Page4 extends StatelessWidget implements IAddCarPage {
   final TextEditingController _controller = TextEditingController();
 

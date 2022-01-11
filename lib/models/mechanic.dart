@@ -28,6 +28,8 @@ class Mechanic {
     required this.description,
     required this.location,
     required this.userRate,
+    this.userComment = '',
+    required this.averageRate,
     this.tags = const [],
     // required this.advertise,
   });
@@ -40,7 +42,9 @@ class Mechanic {
   final String description;
   final CustomLocation location;
   final List<String> tags;
-  final int userRate;
+  int userRate;
+  String userComment;
+  final double averageRate;
   double? _distance;
 
   double getDistance(CustomLocation location) {
@@ -48,18 +52,28 @@ class Mechanic {
     return _distance!;
   }
 
-  factory Mechanic.fromJson(Map<String, dynamic> json) => Mechanic(
-        id: json["id"],
-        name: json["name"],
-        address: json["address"],
-        phoneNumber: json["phone"],
-        image: json["image"],
-        description: json["description"],
-        location: CustomLocation.fromJson(json["location"]),
-        userRate: json["user_rate"],
-        tags: List<String>.from(json["tags"].map((x) => x)),
-        // advertise: json["advertise"],
-      );
+  factory Mechanic.fromJson(Map<String, dynamic> json) {
+    double averageRate = json["rate"] ?? 0;
+    if (averageRate < 0) averageRate = 0;
+    if (averageRate > 5) averageRate = 5;
+    int userRate = (double.tryParse(json["user_rate"].toString()) ?? 0).round();
+    if (userRate < 0) userRate = 0;
+    if (userRate > 5) userRate = 5;
+    return Mechanic(
+      id: json["id"],
+      name: json["name"],
+      address: json["address"],
+      phoneNumber: json["phone"],
+      image: json["image"],
+      description: json["description"],
+      location: CustomLocation.fromJson(json["location"]),
+      userRate: userRate,
+      userComment: json["user_comment"],
+      averageRate: averageRate,
+      tags: List<String>.from(json["tags"].map((x) => x)),
+      // advertise: json["advertise"],
+    );
+  }
 }
 
 class CustomLocation {

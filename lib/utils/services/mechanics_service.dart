@@ -5,6 +5,8 @@ import 'package:zoomicar/constants/api_keys.dart';
 import 'package:zoomicar/models/mechanic.dart';
 import 'package:zoomicar/utils/helpers/show_snack_bar.dart';
 
+import 'account_change_handler.dart';
+
 class MechanicsService extends ChangeNotifier {
   static final _instance = MechanicsService._();
   CustomLocation? _location;
@@ -48,7 +50,10 @@ class MechanicsService extends ChangeNotifier {
 
   Future<List<Mechanic>> getServiceCenters(CustomLocation location) async {
     if (_mechanics.isEmpty) {
-      Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
+      Dio dio = Dio(BaseOptions(
+        baseUrl: baseUrl,
+        headers: {authorization: AccountChangeHandler().token ?? ''},
+      ));
       Response response = await dio.post(
         '/car/service_centers',
         data: {"long": location.long, "lat": location.lat},

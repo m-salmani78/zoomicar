@@ -22,10 +22,8 @@ class MechanicItemView extends StatelessWidget {
       margin: const EdgeInsets.all(8),
       clipBehavior: Clip.antiAlias,
       elevation: defaultElevation,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(cornerRadius)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        splashColor: Colors.transparent,
         onTap: () {
           Navigator.push(
             context,
@@ -40,7 +38,7 @@ class MechanicItemView extends StatelessWidget {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -74,18 +72,50 @@ class MechanicItemView extends StatelessWidget {
                     TextStyle(color: Theme.of(context).colorScheme.secondary),
               ),
               const SizedBox(height: 8),
-              ReadMoreText(
-                mechanic.description,
-                trimLines: 2,
-                style: const TextStyle(fontSize: 14),
-                trimMode: TrimMode.Line,
-                // colorClickableText: Colors.pink,
-                trimCollapsedText: 'بیشتر',
-                trimExpandedText: 'کمتر',
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: ReadMoreText(
+                      mechanic.description,
+                      trimLines: 2,
+                      style: const TextStyle(fontSize: 14),
+                      trimMode: TrimMode.Line,
+                      trimCollapsedText: 'بیشتر',
+                      trimExpandedText: 'کمتر',
+                    ),
+                  ),
+                  _buildAvgRate(context),
+                ],
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAvgRate(BuildContext context) {
+    final color = Theme.of(context).brightness == Brightness.light
+        ? Colors.amber
+        : Colors.white;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.amber.shade100.withOpacity(0.5)
+            : Colors.black,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            mechanic.averageRate.toStringAsFixed(1),
+            style: const TextStyle(fontSize: 13),
+          ),
+          Icon(Icons.star_rounded, color: color, size: 22),
+        ],
       ),
     );
   }

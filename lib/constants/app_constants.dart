@@ -18,3 +18,10 @@ const shadowOffset = Offset(-0.2, 0.3);
 const textShadow = [
   Shadow(blurRadius: 4, offset: shadowOffset, color: Colors.black45),
 ];
+
+BoxDecoration customCardDecoration(BuildContext context) => BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      color: Theme.of(context).brightness == Brightness.light
+          ? Colors.grey[100]
+          : Theme.of(context).cardColor,
+    );

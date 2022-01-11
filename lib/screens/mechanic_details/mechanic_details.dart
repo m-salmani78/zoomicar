@@ -3,23 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zoomicar/constants/app_constants.dart';
+import 'package:zoomicar/screens/mechanic_details/widget/comments_list_view.dart';
+import 'package:zoomicar/utils/services/mechanic_rate_service.dart';
 import '/models/mechanic.dart';
 import '/models/problem_model.dart';
 import '/screens/map/map_screen.dart';
-import '/screens/mechanic_details/widget/rating_bar.dart';
+import 'widget/your_rate_view.dart';
 import '../../constants/api_keys.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MechanicDetailsScreen extends StatelessWidget {
-  // static const String routeName = '/mechanic details';
   final Mechanic mechanic;
   final CustomLocation location;
 
-  // ignore: use_key_in_widget_constructors
   const MechanicDetailsScreen({required this.mechanic, required this.location});
 
   @override
   Widget build(BuildContext context) {
+    final MechanicRateService rateService = MechanicRateService(
+      mechanic: mechanic,
+      rate: mechanic.userRate * 1,
+      text: mechanic.userComment,
+    );
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -94,7 +99,7 @@ class MechanicDetailsScreen extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate(
               <Widget>[
-                _buildCapabilities(),
+                _buildCapabilities(context),
                 _buildRow(
                   leading: 'نام مرکز',
                   trailing: mechanic.name,
@@ -130,13 +135,21 @@ class MechanicDetailsScreen extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
-                    'ثبت امتیاز',
+                    'نظر شما',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                CustomRatingBar(
-                  id: mechanic.id,
-                  initialRating: mechanic.userRate,
+                YourRateView(
+                  rateService: rateService,
+                ),
+                const SizedBox(height: 8),
+                const Divider(thickness: 1),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text(
+                    'نظرات کاربران',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const SizedBox(height: 200),
               ],
@@ -194,21 +207,29 @@ class MechanicDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCapabilities() {
+  Widget _buildCapabilities(BuildContext context) {
     return IntrinsicHeight(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 7),
         scrollDirection: Axis.horizontal,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
             _capability(
-              icon: const Icon(Icons.car_repair),
-              text: const Text('تعمیر خودرو'),
+              context,
+              icon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(mechanic.averageRate.toStringAsFixed(1)),
+                  const Icon(Icons.star_rate_rounded),
+                ],
+              ),
+              text: const Text('امتیاز'),
             ),
             ...mechanic.tags.map((tag) {
               return _capability(
+                context,
                 icon: Image.asset(
                   tagToAsset(tag),
                   width: 24,
@@ -220,26 +241,23 @@ class MechanicDetailsScreen extends StatelessWidget {
                 text: Text(tagToTitle(tag)),
               );
             }),
-          ]
-              .expand((element) => [
-                    element,
-                    const VerticalDivider(
-                      thickness: 1,
-                      width: 32,
-                      indent: 4,
-                      endIndent: 4,
-                    )
-                  ])
-              .toList(),
+          ],
         ),
       ),
     );
   }
 
-  Widget _capability({required Widget icon, required Widget text}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [icon, const Spacer(), text],
+  Widget _capability(BuildContext context,
+      {required Widget icon, required Widget text}) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 7),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      constraints: const BoxConstraints(minWidth: 80),
+      decoration: customCardDecoration(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [icon, const Spacer(), text],
+      ),
     );
   }
 }

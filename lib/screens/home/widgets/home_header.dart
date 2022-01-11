@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:zoomicar/constants/app_constants.dart';
 import '../../../utils/services/account_change_handler.dart';
 import '../../../constants/api_keys.dart';
 import '/screens/home/widgets/header_background.dart';
@@ -21,27 +22,41 @@ class HomeHeader extends StatelessWidget {
         Column(
           children: [
             const Spacer(),
-            Container(
-              child: car == null
-                  ? Image.asset(
-                      'assets/images/no_car.png',
-                      height: size.height * 0.2,
-                    )
-                  : CachedNetworkImage(
-                      useOldImageOnUrlChange: true,
-                      imageUrl: baseUrl + car!.image,
-                      height: size.height * 0.2,
-                      progressIndicatorBuilder: (context, url, progress) {
-                        return ConstrainedBox(
-                          constraints:
-                              BoxConstraints(maxWidth: size.width * 0.4),
-                          child: const Center(child: LinearProgressIndicator()),
-                        );
-                      },
-                      errorWidget: (context, url, error) =>
-                          Image.asset('assets/images/car_sample.png'),
+            car == null
+                ? Image.asset(
+                    'assets/images/no_car.png',
+                    height: size.height * 0.2,
+                    width: size.width - (36 * 2.5),
+                  )
+                : CachedNetworkImage(
+                    useOldImageOnUrlChange: true,
+                    imageUrl: baseUrl + car!.image,
+                    height: size.height * 0.2,
+                    width: size.width - (36 * 2.5),
+                    progressIndicatorBuilder: (context, url, progress) {
+                      return ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: size.width * 0.4),
+                        child: const Center(child: LinearProgressIndicator()),
+                      );
+                    },
+                    errorWidget: (context, url, error) => Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(cornerRadius),
+                      ),
+                      child: Column(
+                        children: const [
+                          Icon(Icons.warning_rounded,
+                              size: 48, color: Colors.red),
+                          Text(
+                            'تصویر پیدا نشد!',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ),
                     ),
-            ),
+                  ),
             const Spacer(),
             TextButton(
               child: _buildCarModel(),
@@ -62,7 +77,6 @@ class HomeHeader extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               'سلام ${AccountChangeHandler().userName}، خوش آمدید',
-              // 'Hi ${AccountChangeNotifier.userName}, Welcome',
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white),
             ),
@@ -80,7 +94,6 @@ class HomeHeader extends StatelessWidget {
         (car == null)
             ? const Text(
                 ' هیچ دستگاهی موجود نیست ',
-                // ' no device ',
                 style: TextStyle(color: Colors.white60),
               )
             : Text(

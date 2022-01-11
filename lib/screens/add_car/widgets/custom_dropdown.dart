@@ -26,18 +26,22 @@ class _ChooseCarParameterState extends State<ChooseCarParameter> {
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<String>(
-      mode: Mode.MENU,
+      mode: Mode.DIALOG,
       selectedItem: widget.initialValue,
       showSearchBox: true,
       showClearButton: true,
       showSelectedItems: true,
       showAsSuffixIcons: true,
+      searchFieldProps: TextFieldProps(
+          decoration: const InputDecoration(
+              hintText: 'یک مورد را انتخاب کنید',
+              prefixIcon: Icon(Icons.search),
+              contentPadding: EdgeInsets.all(12))),
       onFind: widget.onFind,
       itemAsString: (item) => item ?? '',
       onChanged: widget.onChanged,
       dropdownSearchDecoration: InputDecoration(
         labelText: widget.hint,
-        hintText: 'یک مورد را انتخاب کنید',
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
