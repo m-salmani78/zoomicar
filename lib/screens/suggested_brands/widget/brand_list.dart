@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:zoomicar/screens/suggested_brands/widget/band_details_screen.dart';
 import 'package:zoomicar/screens/webview_screen/webview_screen.dart';
 import '/constants/app_constants.dart';
 import '/models/brand_model.dart';
 import '../../../constants/api_keys.dart';
-import 'package:readmore/readmore.dart';
 
 class BrandList extends StatelessWidget {
-  // ignore: use_key_in_widget_constructors
   const BrandList({required this.brands});
 
   final List<Brand> brands;
@@ -16,7 +15,7 @@ class BrandList extends StatelessWidget {
   Widget build(BuildContext context) {
     return brands.isNotEmpty
         ? ListView.builder(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             itemCount: brands.length,
             itemBuilder: (context, index) {
               return _buildItem(context, brands[index]);
@@ -40,66 +39,99 @@ class BrandList extends StatelessWidget {
 
   Widget _buildItem(BuildContext context, Brand brand) {
     return Card(
-      // margin: const EdgeInsets.all(8),
       elevation: defaultElevation,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cornerRadius)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 12, 8, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BrandDetailsScreen(brand: brand),
+              ));
+        },
+        child: Row(
           children: [
-            Row(
-              children: [
-                Image.network(baseUrl + brand.image,
-                    width: 72, height: 72, fit: BoxFit.fill),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Column(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(cornerRadius),
+              child: Image.network(baseUrl + brand.image,
+                  width: 110, height: 120, fit: BoxFit.cover),
+            ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            brand.name,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          const Spacer(),
-                          Text('قیمت ${brand.price}',
-                              style: Theme.of(context).textTheme.caption),
-                        ],
+                      Text(
+                        brand.name,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 8),
-                      ReadMoreText(
-                        brand.description,
-                        style: const TextStyle(fontSize: 14),
-                        textAlign: TextAlign.justify,
-                        trimLines: 2,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'بیشتر',
-                        trimExpandedText: 'کمتر',
+                      const Spacer(),
+                      Text('قیمت ${brand.price}',
+                          style: Theme.of(context).textTheme.caption),
+                    ],
+                  ),
+                  Text(
+                    brand.description,
+                    maxLines: 2,
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Row(
+                    children: [
+                      buildAvgRate(context, brand.rate),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const WebViewPage(
+                                    url: 'https://speedy.iranecar.com/'),
+                              ));
+                        },
+                        child: const Text('مشاهده سایت'),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(width: 8),
-              ],
+                ],
+              ),
             ),
-            TextButton(
-              onPressed: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const WebViewPage(
-                          url: 'https://speedy.iranecar.com/'),
-                    ));
-              },
-              child: const Text('مشاهده سایت'),
-            )
+            const SizedBox(width: 12),
           ],
         ),
       ),
     );
   }
+}
+
+Widget buildAvgRate(BuildContext context, double rate) {
+  final color = Theme.of(context).brightness == Brightness.light
+      ? Colors.amber
+      : Colors.white;
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    decoration: BoxDecoration(
+      color: Theme.of(context).brightness == Brightness.light
+          ? Colors.amber.shade100.withOpacity(0.4)
+          : Colors.black,
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.star_rounded, color: color, size: 22),
+        Text(
+          rate.toStringAsFixed(1),
+          style: const TextStyle(fontSize: 13),
+        ),
+        const SizedBox(width: 4),
+      ],
+    ),
+  );
 }

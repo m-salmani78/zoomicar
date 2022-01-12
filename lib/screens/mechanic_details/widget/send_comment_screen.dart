@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:zoomicar/constants/app_constants.dart';
 import 'package:zoomicar/screens/mechanic_details/widget/your_rate_view.dart';

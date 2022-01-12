@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:zoomicar/constants/app_constants.dart';
@@ -18,8 +16,6 @@ class YourRateView extends StatefulWidget {
 class _YourRateViewState extends State<YourRateView> {
   @override
   Widget build(BuildContext context) {
-    log('initial rate = ${widget.rateService.rate}');
-    log('initial comment = ${widget.rateService.text}');
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: customCardDecoration(context),
@@ -62,14 +58,15 @@ class _YourRateViewState extends State<YourRateView> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(cornerRadius),
-                      color: Colors.white),
+                      color: Theme.of(context).scaffoldBackgroundColor),
                   child: Text(widget.rateService.text),
                 )
-              : const SizedBox(height: 12),
+              : const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Divider(
               color: Theme.of(context).scaffoldBackgroundColor,
-              height: 8,
-              thickness: 8),
+              height: 6,
+              thickness: 6),
           SizedBox(
             width: double.infinity,
             child: TextButton(

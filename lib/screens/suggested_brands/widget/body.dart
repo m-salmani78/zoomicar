@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 import '/models/brand_model.dart';
-import '/models/problem_model.dart';
-import '/screens/mechanics/mechanics_screen.dart';
 
 import 'brand_list.dart';
 
 class Body extends StatelessWidget {
-  // ignore: use_key_in_widget_constructors
-  const Body({required this.json, required this.problem});
+  const Body({required this.brands, required this.changingPrice});
 
-  final Map<String, dynamic> json;
-  final Problem problem;
+  final List<Brand> brands;
+  final int changingPrice;
 
   @override
   Widget build(BuildContext context) {
-    final brands = List<Brand>.from(
-      (json["brands"] as List).map((x) => Brand.fromJson(x)),
-    );
-    final int changingPrice = json["changing_price"] ?? -1;
     final minPrice = brands.isNotEmpty
         ? brands
             .reduce((curr, next) => curr.price < next.price ? curr : next)
@@ -35,15 +28,6 @@ class Body extends StatelessWidget {
         Flexible(child: BrandList(brands: brands)),
         const Divider(height: 0),
         _buildPriceRange(max: maxPrice, min: minPrice),
-        TextButton(
-          child: const Text('نزدیکترین مراکز تعویض'),
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MechanicsScreen(problem: problem),
-              )),
-        ),
-        const SizedBox(height: 8),
       ],
     );
   }
@@ -53,10 +37,13 @@ class Body extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
+          const Icon(Icons.hardware_rounded),
+          const SizedBox(width: 4),
           const Text('اجرت تعویض',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const Spacer(),
           Text(changingPrice.toString() + ' تومان'),
+          const SizedBox(width: 4),
         ],
       ),
     );
@@ -67,10 +54,13 @@ class Body extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
+          const Icon(Icons.attach_money),
+          const SizedBox(width: 4),
           const Text('بازه قیمت',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const Spacer(),
           Text('$min - $max'),
+          const SizedBox(width: 4),
         ],
       ),
     );

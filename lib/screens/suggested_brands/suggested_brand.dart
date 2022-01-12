@@ -1,11 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:zoomicar/models/brand_model.dart';
+import 'package:zoomicar/screens/mechanics/mechanics_screen.dart';
+import 'package:zoomicar/utils/services/brand_service.dart';
 import '/models/problem_model.dart';
-import '../../utils/services/account_change_handler.dart';
-import '../../constants/api_keys.dart';
 import '/widgets/form_error.dart';
 
 import 'widget/body.dart';
@@ -25,12 +22,8 @@ class _SuggestedBrandsScreenState extends State<SuggestedBrandsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('برندهای پیشنهادی')),
-      body: FutureBuilder(
-        future: http.post(
-          Uri.parse(baseUrl + '/car/brands'),
-          headers: {authorization: AccountChangeHandler().token ?? ""},
-          body: {"accessory": widget.problem.tag},
-        ),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: BrandService.getBrands(context, accessory: widget.problem.tag),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildLoading();
@@ -39,17 +32,22 @@ class _SuggestedBrandsScreenState extends State<SuggestedBrandsScreen> {
             return _buildError();
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            final response = snapshot.data as http.Response;
-            log('@ Brands: ' + response.body);
-            if (response.statusCode == 200) {
-              return Body(
-                problem: widget.problem,
-                json: jsonDecode(utf8.decode(response.bodyBytes)),
-              );
-            }
+            final brands = brandsFromMap(snapshot.data!['brands']);
+            // log('@ Brands: ' + brands.toString());
+            return Body(
+                changingPrice: snapshot.data!['changing_price'],
+                brands: brands);
           }
           return _buildLoading();
         },
+      ),
+      bottomNavigationBar: TextButton(
+        child: const Text('نزدیکترین مراکز تعویض'),
+        onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MechanicsScreen(problem: widget.problem),
+            )),
       ),
     );
   }

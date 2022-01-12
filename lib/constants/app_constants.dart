@@ -25,3 +25,6 @@ BoxDecoration customCardDecoration(BuildContext context) => BoxDecoration(
           ? Colors.grey[100]
           : Theme.of(context).cardColor,
     );
+
+final BoxBorder customContainerBorder =
+    Border.all(color: Colors.grey.withOpacity(0.5), width: 0.5);

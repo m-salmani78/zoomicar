@@ -122,7 +122,7 @@ class MechanicDetailsScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     'توضیحات',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
                 Padding(
@@ -136,7 +136,7 @@ class MechanicDetailsScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     'نظر شما',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
                 YourRateView(
@@ -148,10 +148,11 @@ class MechanicDetailsScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     'نظرات کاربران',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
-                const SizedBox(height: 200),
+                CommentsListView(rateService: rateService),
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -199,7 +200,9 @@ class MechanicDetailsScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          Text(leading, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(leading,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const Spacer(),
           Text(trailing),
         ],
