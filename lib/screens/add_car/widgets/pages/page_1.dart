@@ -50,8 +50,12 @@ class _Page1State extends State<Page1> {
             },
             hint: 'برند خودرو*',
             initialValue:
-                carHandler.car.name == '' ? null : carHandler.car.name,
-            onChanged: (value) => carHandler.car.name = value ?? '',
+                carHandler.car.name.isEmpty ? null : carHandler.car.name,
+            onChanged: (value) => setState(() {
+              log(value ?? '...', name: 'برند خودرو');
+              carHandler.car.name = value ?? '';
+              carHandler.car.model = '';
+            }),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return requiredInputError;
@@ -79,8 +83,9 @@ class _Page1State extends State<Page1> {
             },
             hint: 'مدل خودرو*',
             initialValue:
-                carHandler.car.model == '' ? null : carHandler.car.model,
+                carHandler.car.model.isEmpty ? null : carHandler.car.model,
             onChanged: (value) {
+              log(value ?? '...', name: 'مدل خودرو');
               carHandler.car.model = value ?? '';
             },
             validator: (value) {
@@ -108,6 +113,7 @@ class _Page1State extends State<Page1> {
             onSaved: (value) {
               carHandler.car.thirdPartyInsurance = value;
             },
+            onDismissed: () => carHandler.car.thirdPartyInsurance = null,
           ),
         ],
       ),
@@ -134,7 +140,8 @@ class _Page1State extends State<Page1> {
             decoration: const InputDecoration(
               hintTextDirection: TextDirection.ltr,
               hintText: '0 Km',
-              contentPadding: EdgeInsets.symmetric(horizontal: 16),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) return requiredInputError;

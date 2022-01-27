@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linear_datepicker/flutter_datepicker.dart';
@@ -6,26 +8,40 @@ import '/models/car_model.dart';
 
 class ThirdPartyInsurance extends StatefulWidget {
   final ValueChanged<Jalali> onSaved;
+  final void Function() onDismissed;
   final String? initialValue;
-  // ignore: use_key_in_widget_constructors
-  const ThirdPartyInsurance({required this.onSaved, this.initialValue});
+  const ThirdPartyInsurance(
+      {required this.onSaved, this.initialValue, required this.onDismissed});
 
   @override
   _ThirdPartyInsuranceState createState() => _ThirdPartyInsuranceState();
 }
 
 class _ThirdPartyInsuranceState extends State<ThirdPartyInsurance> {
+  late TextEditingController _controller;
   String date = shamsiToString(Jalali.now());
 
   @override
+  void dispose() {
+    log('dispose controller', name: 'ThirdPartyInsurance');
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    _controller = TextEditingController(
+        text: widget.initialValue?.split('/').reversed.join(' / '));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final _controller = TextEditingController(text: widget.initialValue);
     return Row(
       children: [
         Expanded(
           child: Text(
             'بیمه شخص ثالث:',
-            // 'Third Party Insurance:',
             style: Theme.of(context).textTheme.subtitle1,
           ),
         ),
@@ -36,16 +52,18 @@ class _ThirdPartyInsuranceState extends State<ThirdPartyInsurance> {
             controller: _controller,
             decoration: const InputDecoration(
               hintText: '00 / 00 / 00',
-              contentPadding: EdgeInsets.symmetric(horizontal: 12),
+              contentPadding: EdgeInsets.all(12),
             ),
             onTap: () async {
-              var result = await showCupertinoModalPopup<String>(
+              final result = await showCupertinoModalPopup<String>(
                 context: context,
                 builder: (context) {
                   return CupertinoActionSheet(
                     actions: [
                       _buildDatePicker(),
                     ],
+                    title: const Text('انتخاب تاریخ',
+                        style: TextStyle(fontFamily: "IranianSans")),
                     cancelButton: CupertinoActionSheetAction(
                       onPressed: () => Navigator.of(context).pop('confirm'),
                       child: const Text(
@@ -62,8 +80,9 @@ class _ThirdPartyInsuranceState extends State<ThirdPartyInsurance> {
               );
               if (result == null) {
                 _controller.clear();
+                widget.onDismissed();
               } else {
-                _controller.text = date;
+                _controller.text = date.split('/').reversed.join(' / ');
                 widget.onSaved(shamsiFromString(date)!);
               }
             },
@@ -76,7 +95,7 @@ class _ThirdPartyInsuranceState extends State<ThirdPartyInsurance> {
   Widget _buildDatePicker() {
     return Container(
       padding: const EdgeInsets.only(top: 8),
-      color: Colors.white,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: LinearDatePicker(
@@ -92,17 +111,18 @@ class _ThirdPartyInsuranceState extends State<ThirdPartyInsurance> {
               color: Theme.of(context).colorScheme.primary,
               decoration: TextDecoration.none,
             ),
-            selectedRowStyle: const TextStyle(
+            selectedRowStyle: TextStyle(
               fontFamily: "IranianSans",
               fontSize: 18.0,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onBackground,
               decoration: TextDecoration.none,
             ),
-            unselectedRowStyle: const TextStyle(
+            unselectedRowStyle: TextStyle(
               fontFamily: "IranianSans",
               fontSize: 16.0,
               fontWeight: FontWeight.normal,
-              color: Colors.black45,
+              color:
+                  Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
               decoration: TextDecoration.none,
             ),
             showLabels: true,

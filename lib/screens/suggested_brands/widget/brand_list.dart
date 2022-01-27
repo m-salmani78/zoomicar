@@ -90,8 +90,9 @@ class BrandList extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const WebViewPage(
-                                    url: 'https://speedy.iranecar.com/'),
+                                builder: (context) => WebViewPage(
+                                    url: brand.link ??
+                                        'https://speedy.iranecar.com/'),
                               ));
                         },
                         child: const Text('مشاهده سایت'),

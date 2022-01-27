@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:zoomicar/constants/app_constants.dart';
 import '/models/mechanic.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
@@ -94,6 +94,7 @@ class _MapScreenState extends State<MapScreen> {
             // mapController = controller;
             setState(() {});
           },
+          mapToolbarEnabled: false,
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
           mapType: hybridType ? MapType.hybrid : MapType.normal,
@@ -132,12 +133,11 @@ class _MapScreenState extends State<MapScreen> {
 
   _launchMaps() async {
     String googleUrl =
-        'https://www.google.com/maps/search/?api=1&query=${widget.location.lat},${widget.location.long}';
-    if (await canLaunch(googleUrl)) {
-      await launch(googleUrl);
-    } else {
-      throw 'Could not open the map.';
-    }
+        "https://www.google.com/maps/dir/?api=1&destination=${widget.location.lat.toString()},${widget.location.long.toString()}&travelmode=driving";
+    // 'https://www.google.com/maps/dir/?api=1&query=${widget.location.lat},${widget.location.long}';
+    if (await url_launcher.canLaunch(googleUrl)) {
+      await url_launcher.launch(googleUrl);
+    } else {}
   }
 }
 

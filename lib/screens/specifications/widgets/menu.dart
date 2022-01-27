@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:zoomicar/constants/app_constants.dart';
+import 'package:zoomicar/utils/helpers/show_snack_bar.dart';
 import '/screens/add_car/add_car.dart';
 import '/models/car_model.dart';
 import '/screens/home/home_screen.dart';
@@ -48,21 +50,20 @@ class MenuItems extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(cornerRadius)),
+                    contentPadding: const EdgeInsets.all(18),
                     content:
                         const Text('آیا مطمئنید میخواهید خودرو را حذف کنید؟'),
                     actions: [
                       TextButton(
                         child: const Text('بله'),
-                        // child: Text('Yes'),
                         onPressed: () async {
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (_) =>
-                          //       Center(child: CircularProgressIndicator()),
-                          // );
-                          var error = await AccountChangeHandler()
+                          final error = await AccountChangeHandler()
                               .deleteCurrentCar(car.carId);
                           if (error == null) {
+                            showSuccessSnackBar(context,
+                                message: 'حذف خودرو با موفقیت انجام شد.');
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
@@ -71,25 +72,11 @@ class MenuItems extends StatelessWidget {
                             );
                           } else {
                             Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text(error),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('فهمیدم'),
-                                    )
-                                  ],
-                                );
-                              },
-                            );
+                            showWarningSnackBar(context, message: error);
                           }
                         },
                       ),
                       TextButton(
-                        // child: Text('Cancel'),
                         child: const Text('لغو'),
                         onPressed: () => Navigator.pop(context),
                       ),

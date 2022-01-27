@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:zoomicar/constants/strings.dart';
+import 'package:zoomicar/utils/helpers/show_snack_bar.dart';
 
 class AboutUsMenuItems extends StatelessWidget {
   const AboutUsMenuItems({Key? key}) : super(key: key);
@@ -25,14 +28,24 @@ class AboutUsMenuItems extends StatelessWidget {
             ),
           ),
           _buildItem(
-            'ارتباط با ما',
+            'تماس با ما',
             avatar: const Icon(Icons.call),
-            onTap: () {},
+            onTap: () async {
+              await canLaunch(contactUs)
+                  ? await launch(contactUs)
+                  : showWarningSnackBar(context,
+                      message: 'مشکلی در باز کردن لینک رخ داده است');
+            },
           ),
           _buildItem(
             'مشاهده سایت',
             avatar: const Icon(Icons.language),
-            onTap: () {},
+            onTap: () async {
+              await canLaunch(officialWebsiteUrl)
+                  ? await launch(officialWebsiteUrl)
+                  : showWarningSnackBar(context,
+                      message: 'مشکلی در باز کردن لینک رخ داده است');
+            },
           ),
         ],
       ),

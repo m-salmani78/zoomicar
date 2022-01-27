@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zoomicar/constants/strings.dart';
 import '/config/themes/theme_config.dart';
 import '/screens/about_us/about_us.dart';
 import '/screens/specifications/specifications_screen.dart';
@@ -50,9 +51,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.person_add),
             title: const Text('دعوت از دوستان'),
             onTap: () {
-              String appUrl = 'https://cafebazaar.ir/app/com.mobiliha.badesaba';
+              String appUrl = officialWebsiteUrl;
               Share.share(
-                'اگه سلامت ماشینت برات مهمه حتما زومیکارو رو گوشیت نصب کن. \n$appUrl',
+                '\nاگه سلامت ماشینت برات مهمه حتما اپلیکیشن زومیکار رو روی گوشیت نصب کن. \n\n$appUrl',
                 subject: 'Zoomicar',
               );
             },

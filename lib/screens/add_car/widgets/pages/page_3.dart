@@ -25,7 +25,7 @@ class Page3 extends StatelessWidget implements IAddCarPage {
           },
         ),
         numericTextField(
-          labelText: 'آخرین تعویض گیربکس',
+          labelText: 'آخرین تعویض روغن گیربکس',
           // labelText: 'Last gearbox change',
           initialValue: carHandler.car.lastGearboxOilChange,
           onChanged: (value) {
@@ -83,19 +83,29 @@ class Page3 extends StatelessWidget implements IAddCarPage {
 }
 
 Widget numericTextField(
-    {String? labelText,
+    {required String labelText,
     ValueChanged<String>? onChanged,
     int? initialValue = 0}) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 12.0),
+    padding: const EdgeInsets.only(top: 12, bottom: 18),
     child: TextFormField(
       initialValue: initialValue == 0 ? null : initialValue.toString(),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      textInputAction: TextInputAction.next,
       onChanged: onChanged,
       textDirection: TextDirection.ltr,
       decoration: InputDecoration(
-        labelText: labelText,
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 18, horizontal: 14),
+        label: Text(
+          labelText + ':',
+          style: const TextStyle(fontSize: 20, fontFamily: "IranianSans"),
+        ),
+        prefix: const Text(
+          '(اختیاری)',
+          style: TextStyle(fontSize: 14),
+        ),
         hintTextDirection: TextDirection.ltr,
         hintText: '0 Km',
         labelStyle: const TextStyle(fontSize: 18),

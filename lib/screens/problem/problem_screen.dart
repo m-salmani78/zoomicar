@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zoomicar/constants/strings.dart';
 import 'package:zoomicar/widgets/circular_percent_indicator.dart';
 import '/models/problem_model.dart';
 import '/screens/mechanics/mechanics_screen.dart';
@@ -8,7 +9,6 @@ import '/screens/suggested_brands/suggested_brand.dart';
 import 'widget/recommended_machanics.dart';
 
 class ProblemScreen extends StatelessWidget {
-  // static const routeName = '/problem';
   final Problem problem;
 
   const ProblemScreen({Key? key, required this.problem}) : super(key: key);
@@ -16,9 +16,7 @@ class ProblemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(problem.title),
-      ),
+      appBar: AppBar(title: Text(problem.title)),
       body: Column(
         children: [
           Padding(
@@ -115,7 +113,7 @@ class ProblemScreen extends StatelessWidget {
         if (problem.problemStatus == ProblemStatus.urgent ||
             problem.problemStatus == ProblemStatus.critical)
           Text(
-            "سطح روغن ماشین شما کم است. برای از بین بردن اصطکاک و گرم شدن بیش از حد ، روغن موتور را تعویض کنید.",
+            problemsDescrption[problem.tag] ?? '',
             style: Theme.of(context).textTheme.caption,
             textAlign: TextAlign.center,
           ),

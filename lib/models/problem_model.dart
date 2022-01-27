@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math' as math;
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -11,11 +10,11 @@ enum ProblemStatus { urgent, critical, fair, none }
 
 ProblemStatus percentToProblemStatus(double percentage) {
   assert(percentage >= 0 && percentage <= 100);
-  if (percentage >= 90) {
+  if (percentage == 100) {
     return ProblemStatus.urgent;
-  } else if (percentage >= 70) {
+  } else if (percentage >= 80) {
     return ProblemStatus.critical;
-  } else if (percentage >= 50) {
+  } else if (percentage >= 60) {
     return ProblemStatus.fair;
   } else {
     return ProblemStatus.none;
@@ -62,7 +61,7 @@ Map<DateTime, int> notifsFromJson(dynamic notifs) {
 List<Problem> problemsFromJson(String str, {required int carId}) {
   Map<String, dynamic> json = jsonDecode(str);
   return json.keys.map((key) {
-    final problem = Problem(carId: carId, tag: key, description: 'description');
+    final problem = Problem(carId: carId, tag: key);
     problem.notifs = notifsFromJson(json[key]);
     return problem;
   }).toList();
@@ -107,7 +106,7 @@ class Problem {
   Problem({
     required this.carId,
     required this.tag,
-    required this.description,
+    this.description = "",
     this.notifs = const {},
   });
 
@@ -132,15 +131,17 @@ class Problem {
     }
   }
 
+  double? _percent;
   double get percent {
+    if (_percent != null) return _percent!;
     final now = DateTime.now();
     final result = date;
     if (result == null) return 100;
     var difference = result.difference(now).inDays.toDouble();
-    difference = math.max(difference / 7, 0);
-    // print('@ percentage = ' + notifs[result].toString());
-    // print('@@@ difference = ' + difference.toString());
-    return math.max((notifs[result] ?? 40) - difference, 20);
+    difference = math.max(difference / 7, 0); //convert to week
+    _percent = math.max((notifs[result] ?? 0) - (difference * 4), 20);
+    // log('pecent: $_percent', name: tag);
+    return _percent!;
   }
 
   DateTime? get date {
@@ -148,8 +149,8 @@ class Problem {
     try {
       var date = notifs.keys.first;
       while (date.isBefore(now)) {
-        int i = notifs.remove(date) ?? -1;
-        log('@ $tag remove = ' + i.toString());
+        notifs.remove(date) ?? -1;
+        // log('@ $tag remove = ' + i.toString());
         date = notifs.keys.first;
       }
       return date;

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:zoomicar/constants/strings.dart';
 import 'package:zoomicar/screens/webview_screen/webview_screen.dart';
 import '/constants/app_constants.dart';
 import '/main.dart';
@@ -21,14 +22,11 @@ import '/utils/services/notifications_service.dart';
 import '/widgets/app_name.dart';
 import '/widgets/form_error.dart';
 import '/widgets/icon_badge.dart';
-import '/widgets/problem_card_view.dart';
-
 import 'explore_items.dart';
 import 'home_header.dart';
 
 class Body extends StatefulWidget {
   final Account? account;
-  // ignore: use_key_in_widget_constructors
   const Body({required this.account});
 
   @override
@@ -47,7 +45,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final account = widget.account;
+    final account = Hive.box<Account>(accountBoxKey).get(widget.account?.id);
     return Scaffold(
       appBar: _buildAppBar(account: account),
       body: SingleChildScrollView(
@@ -68,15 +66,13 @@ class _BodyState extends State<Body> {
                   )
                 : _buildExploreItems(context, account: account),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return const WebViewPage(
-                          url:
-                              'https://fa.wikipedia.org/wiki/%D8%AE%D9%88%D8%AF%D8%B1%D9%88%DB%8C_%D9%87%DB%8C%D8%A8%D8%B1%DB%8C%D8%AF%DB%8C');
+                      return const WebViewPage(url: scientificArticlesUrl);
                     },
                   ));
                 },
@@ -141,11 +137,10 @@ class _BodyState extends State<Body> {
         ? ExploreItems(
             name: 'قطعات خودرو',
             onPressedViewAll: () => _onPressedViewAll(context),
-            children: account.problems
+            problems: account.problems
                 .where((e) =>
                     e.problemStatus == ProblemStatus.urgent ||
                     e.problemStatus == ProblemStatus.critical)
-                .map((e) => ProblemCardView(problem: e))
                 .toList(),
           )
         : FutureBuilder(
@@ -181,11 +176,10 @@ class _BodyState extends State<Body> {
                   return ExploreItems(
                     name: 'قطعات خودرو',
                     onPressedViewAll: () => _onPressedViewAll(context),
-                    children: problems
+                    problems: problems
                         .where((e) =>
                             e.problemStatus == ProblemStatus.urgent ||
                             e.problemStatus == ProblemStatus.critical)
-                        .map((e) => ProblemCardView(problem: e))
                         .toList(),
                   );
                 }

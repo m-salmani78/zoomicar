@@ -34,9 +34,13 @@ class Page4 extends StatelessWidget implements IAddCarPage {
           borderRadius: BorderRadius.circular(32),
           buttonWidth: MediaQuery.of(context).size.width * 0.6,
           selectedColor: Theme.of(context).colorScheme.primary,
+          unselectedColor: Theme.of(context).cardColor,
           selectedTextStyle: const TextStyle(fontSize: 18),
-          unselectedTextStyle:
-              const TextStyle(fontSize: 18, color: Colors.black),
+          unselectedTextStyle: TextStyle(
+              fontSize: 18,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : null),
           buttonHeight: 50,
           selectedButton: -1,
           unselectedShadow: [_boxShadow],

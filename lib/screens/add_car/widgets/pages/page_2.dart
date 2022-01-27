@@ -17,9 +17,9 @@ class Page2 extends StatelessWidget implements IAddCarPage {
       child: Column(
         children: [
           numericTextField(
-            labelText: 'آخرین تعویض موتور',
+            labelText: 'سابقه تعمیر موتور',
             // labelText: 'Last Motor Repair ',
-            initialValue: carHandler.car.lastOilFilterChange,
+            initialValue: carHandler.car.lastMotorRepair,
             onChanged: (value) {
               try {
                 carHandler.car.lastMotorRepair = int.parse(value);
@@ -29,9 +29,9 @@ class Page2 extends StatelessWidget implements IAddCarPage {
             },
           ),
           numericTextField(
-            labelText: 'آخرین تعویض گیربکس',
+            labelText: 'سابقه تعمیر گیربکس',
             // labelText: 'Last Gearbox Repair ',
-            initialValue: carHandler.car.lastOilFilterChange,
+            initialValue: carHandler.car.lastGearboxRepair,
             onChanged: (value) {
               try {
                 carHandler.car.lastGearboxRepair = int.parse(value);
@@ -41,7 +41,7 @@ class Page2 extends StatelessWidget implements IAddCarPage {
             },
           ),
           numericTextField(
-            labelText: 'آخرین تعویض روغن',
+            labelText: 'آخرین تعویض فیلتر روغن',
             // labelText: 'Last Oil Filter Replacement',
             initialValue: carHandler.car.lastOilFilterChange,
             onChanged: (value) {

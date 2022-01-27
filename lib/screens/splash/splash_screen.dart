@@ -8,17 +8,17 @@ import 'widgets/splash_content.dart';
 
 const List<Map<String, String>> splashData = [
   {
-    'image': 'assets/images/ic-fiat-100.png',
+    'image': 'assets/images/slider1.png',
     // description: 'We notify you to when your car needs to repair',
     'description': 'بهترین دستیار راننده و مراقب دائمی ماشین شما',
   },
   {
-    'image': 'assets/images/ic-engine-oil-100.png',
+    'image': 'assets/images/slider2.png',
     // description: 'We notify you to when your car needs to repair',
     'description': 'آگاه سازی کاربر هنگامی که ماشین نیاز به تعویض قطعات دارد',
   },
   {
-    'image': 'assets/images/ic-gas-station-100.png',
+    'image': 'assets/images/slider3.png',
     'description':
         // 'introducing the closest and mechanics when the car has a problem',
         'معرفی نزدیکترین مکانیکی ها زمانی که ماشین شما دچار مشکل شده است.',

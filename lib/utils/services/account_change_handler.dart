@@ -62,7 +62,7 @@ class AccountChangeHandler {
     return token;
   }
 
-  _initialCar(
+  void _initialCar(
       {required SharedPreferences prefs, required Box<Account> accountBox}) {
     int index = prefs.getInt(SharedPrefsKeys.current_car_index) ?? 0;
     if (accountBox.isEmpty || index >= accountBox.length || index < 0) {
@@ -74,7 +74,7 @@ class AccountChangeHandler {
     log('@ I: initial current car. (index = $index)');
   }
 
-  _initialUserName(SharedPreferences prefs) {
+  void _initialUserName(SharedPreferences prefs) {
     _userName = prefs.getString(userNameKey)!;
     log('@ I: initial userName = $_userName');
   }

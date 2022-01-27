@@ -30,7 +30,7 @@ class FilterScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         children: [
           const Text(
-            'محدوده قیمت:',
+            'محدوده فاصله:',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           _buildRangeDistanceFilter(provider),

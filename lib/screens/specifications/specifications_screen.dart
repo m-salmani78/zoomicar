@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:zoomicar/constants/api_keys.dart';
 import '/constants/app_constants.dart';
 import '/screens/add_car/add_car.dart';
 import '/screens/specifications/widgets/menu.dart';
@@ -52,22 +53,35 @@ class _SpecificationsScreenState extends State<SpecificationsScreen> {
                   },
                   child: const Text('افزودن خودرو')))
           : ListView(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
+                Center(
+                  child: Image.network(
+                    baseUrl + car.image,
+                    width: MediaQuery.of(context).size.width - 32,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const SizedBox(height: 8),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 ...items(car),
                 const SizedBox(height: 16),
-                Image.asset('assets/images/ringsport.png', height: 64),
-                const Center(child: Text('نسخه 1.0.0')),
+                Center(
+                  child: Image.asset('assets/images/ringsport.png', height: 64),
+                ),
+                const Center(
+                    child: Text(
+                  'نسخه 1.0.0',
+                  style: TextStyle(height: 1),
+                )),
               ],
             ),
     );
   }
 
   List<Widget> items(Car car) => [
-        _buildRow(
-          name: 'نام',
-          value: car.model,
-        ),
+        _buildRow(name: 'نام', value: car.model, hasKilometer: false),
         _buildRow(
           name: 'کیلومتر خودرو',
           value: car.kilometerage.toString(),
@@ -76,32 +90,37 @@ class _SpecificationsScreenState extends State<SpecificationsScreen> {
             name: 'بیمه شخص ثالث',
             value: (car.thirdPartyInsurance == null)
                 ? ''
-                : '${car.thirdPartyInsurance!.year} / ${car.thirdPartyInsurance!.month} / ${car.thirdPartyInsurance!.month}'),
+                : '${car.thirdPartyInsurance!.year} / ${car.thirdPartyInsurance!.month} / ${car.thirdPartyInsurance!.day}',
+            hasKilometer: false),
+        _buildRow(
+            name: 'وضعیت استفاده از خودرو',
+            value: carUseItems.keys.toList()[car.carUseAmount.index],
+            hasKilometer: false),
+        _buildRow(
+          name: 'سابقه تعمیر موتور',
+          value: car.lastMotorRepair.toString(),
+        ),
+        _buildRow(
+            name: 'سابقه تعمیر گیربکس',
+            value: car.lastGearboxRepair.toString()),
+        _buildRow(
+            name: 'آخرین تعویض فیلتر روغن',
+            value: car.lastOilFilterChange.toString()),
+        _buildRow(
+            name: 'آخرین تعویض فیلتر بنزین',
+            value: car.lastGasolineFilterChange.toString()),
         _buildRow(
             name: 'آخرین تعویض فیلتر هوا',
             value: car.lastAirFilterChange.toString()),
         _buildRow(
-            name: 'آخرین تعویض لنت ترمز',
-            value: car.lastBrakepadChange.toString()),
-        _buildRow(
-            name: 'آخرین تعویض گیربکس',
-            value: car.lastGearboxOilChange.toString()),
-        _buildRow(
             name: 'آخرین تعویض روغن موتور',
             value: car.lastEngineOilChange.toString()),
         _buildRow(
-            name: 'آخرین تعویض فیلتر روغن',
-            value: car.lastGasolineFilterChange.toString()),
+            name: 'آخرین تعویض روغن گیربکس',
+            value: car.lastGearboxOilChange.toString()),
         _buildRow(
-            name: 'آخرین دفعه تعمیر گیربکس',
-            value: car.lastGearboxRepair.toString()),
-        _buildRow(
-          name: 'آخرین دفعه تعمیر موتور',
-          value: car.lastMotorRepair.toString(),
-        ),
-        _buildRow(
-            name: 'آخرین تعویض فیلتر روغن',
-            value: car.lastOilFilterChange.toString()),
+            name: 'آخرین تعویض لنت ترمز',
+            value: car.lastBrakepadChange.toString()),
         _buildRow(
             name: 'آخرین تعویض تسمه تایم',
             value: car.lastTimingbeltChange.toString()),
@@ -109,24 +128,25 @@ class _SpecificationsScreenState extends State<SpecificationsScreen> {
           name: 'آخرین تعویض تایر',
           value: car.lastTireChange.toString(),
         ),
-        _buildRow(
-            name: 'میزان استفاده از خودرو',
-            value: carUseItems.keys.toList()[car.carUseAmount.index]),
-      ].expand((element) => [element, const Divider(height: 32)]).toList();
+      ]
+          .expand((element) =>
+              [element, const Divider(height: 32, indent: 8, endIndent: 8)])
+          .toList();
 
-  Widget _buildRow({required String name, required String value}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        children: [
-          Text(
-            name,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const Spacer(),
-          Text(value, textDirection: TextDirection.ltr)
-        ],
-      ),
+  Widget _buildRow(
+      {required String name, required String value, bool hasKilometer = true}) {
+    return Row(
+      children: [
+        Text(
+          name,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
+        Text(
+          value + (hasKilometer ? ' km' : ''),
+          textDirection: TextDirection.ltr,
+        )
+      ],
     );
   }
 }

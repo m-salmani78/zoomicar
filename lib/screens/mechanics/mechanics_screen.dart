@@ -27,7 +27,7 @@ class _MechanicsScreenState extends State<MechanicsScreen> {
         final provider = context.watch<MechanicsFilterProvider>();
         return Scaffold(
           appBar: AppBar(
-            title: const Text('مکانیکی ها'),
+            title: const Text('نمایشگاه ها'),
             actions: [
               IconBadge(
                 tooltip: 'فیلتر ها',

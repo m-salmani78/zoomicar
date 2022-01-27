@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:zoomicar/models/problem_model.dart';
+import 'package:zoomicar/widgets/problem_card_view.dart';
 
 class ExploreItems extends StatelessWidget {
   final String name;
   final VoidCallback? onPressedViewAll;
-  final List<Widget> children;
+  final List<Problem> problems;
   const ExploreItems(
       {Key? key,
       required this.name,
       this.onPressedViewAll,
-      required this.children})
+      required this.problems})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    problems.sort((a, b) {
+      return b.percent.compareTo(a.percent);
+    });
     return Column(
       children: [
         Padding(
@@ -32,7 +37,7 @@ class ExploreItems extends StatelessWidget {
             ],
           ),
         ),
-        children.isEmpty
+        problems.isEmpty
             ? Container(
                 height: 200,
                 color: Theme.of(context).colorScheme.primary.withOpacity(.01),
@@ -45,7 +50,10 @@ class ExploreItems extends StatelessWidget {
             : SingleChildScrollView(
                 padding: const EdgeInsets.all(4),
                 scrollDirection: Axis.horizontal,
-                child: Row(children: children),
+                child: Row(
+                    children: problems
+                        .map((e) => ProblemCardView(problem: e))
+                        .toList()),
               ),
       ],
     );
